@@ -17,10 +17,12 @@ class SmsWidget extends StatefulWidget {
 
 class _SmsState extends State<SmsWidget> {
   final messageController = TextEditingController();
+  final _simCardProvider = new SimCardsProvider();
+  SimCard _simCard;
+
 
   //streambuilder's behavioursubject
   final BehaviorSubject<String> _contactStringBehavior = BehaviorSubject();
-
   @override
   void initState() {
     super.initState();
@@ -53,25 +55,39 @@ class _SmsState extends State<SmsWidget> {
     address.replaceAll(' ', '');
     final List<String> _contactList = address.split(',');
     final String _messageData = messageController.text;
+    List<StreamSubscription> _list = List();
     for (int i = 0; i < _contactList.length; i++) {
       final _contactNumber = _contactList[i];
       if (_contactNumber != null && _contactNumber.isNotEmpty) {
         final _message = SmsMessage(_contactNumber, _messageData);
-        _message.onStateChanged.listen((state) {
+       final StreamSubscription _t = _message.onStateChanged.listen((state) {
+
           if(state == SmsMessageState.Sent){
-            Navigator.pushNamed(context, AppData.pageRoutSent, arguments: {'number': _contactNumber});
+            Navigator.pushNamed(context, AppData.pageRoutSent).then((value) => _list.forEach((element) {element.cancel();}),);
           }
         });
-        await _messageSender.sendSms(_message).catchError(_onError);
+       _list.add(_t);
+        await _messageSender.sendSms(_message, simCard: _simCard).catchError(_onError);
       }
     }
   }
 
-  Future<SimCard> _selectSim() async {
-    SimCardsProvider sim = new SimCardsProvider();
-    List<SimCard> card = await sim.getSimCards();
-    return card.last;
+  void loadSimCardOne() async {
+    List<SimCard> _cards = await _simCardProvider.getSimCards();
+    _simCard = _cards.first;
   }
+
+
+
+  void loadSimCardTwo() async {
+    List<SimCard> _cards = await _simCardProvider.getSimCards();
+    setState(() {
+      _simCard = _cards.last;
+    });
+    //_simCard = _cards.last;
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -99,6 +115,35 @@ class _SmsState extends State<SmsWidget> {
               ),
             ),
           ),
+
+          Align(
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    loadSimCardOne();
+                  },
+                  color: Colors.lightBlueAccent,
+                  child: Text('SIM 1',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                ),
+                FlatButton(
+                  onPressed: () {
+                    loadSimCardTwo();
+                  },
+                  color: Colors.greenAccent,
+                  child: Text('SIM 2',
+                    style: TextStyle(fontSize: 15),
+                  ),
+                )
+              ],
+            ),
+          ),
+
+
           Container(
             padding: EdgeInsets.all(10),
             child: Column(
@@ -124,6 +169,7 @@ class _SmsState extends State<SmsWidget> {
               ],
             ),
           ),
+
         ],
         ),
 
