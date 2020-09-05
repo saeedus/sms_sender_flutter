@@ -9,15 +9,24 @@ class SmsDelivered extends StatefulWidget {
 }
 
 class _SmsDeliveredState extends State<SmsDelivered> {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('status'),
+          title: Text('STATUS'),
         ),
-        body: Text('Message sent successfully!'),
-      ),
-    );
+        body: Center(
+          child: Text('Message sent successfully!',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.greenAccent,
+            ),
+          ),
+          ),
+        ),
+        );
   }
 }

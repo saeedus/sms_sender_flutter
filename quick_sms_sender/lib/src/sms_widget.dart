@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
+import 'package:quick_sms_sender/src/app_data.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'package:sms/sms.dart';
@@ -18,14 +20,6 @@ class _SmsState extends State<SmsWidget> {
 
   //streambuilder's behavioursubject
   final BehaviorSubject<String> _contactStringBehavior = BehaviorSubject();
-  final BehaviorSubject<String> _smsStatusSendBehavior = BehaviorSubject();
-
-//strambuilder class
-  // Stream<int> contactStream = (() async* {
-  //   await Future<void>.delayed(Duration(seconds: 1));
-  //   yield 1;
-  //   await Future<void>.delayed(Duration(seconds: 1));
-  // })();
 
   @override
   void initState() {
@@ -38,7 +32,6 @@ class _SmsState extends State<SmsWidget> {
   void dispose() {
     super.dispose();
     _contactStringBehavior.close();
-    _smsStatusSendBehavior.close();
   }
 
   void _readContactString() async {
@@ -49,20 +42,27 @@ class _SmsState extends State<SmsWidget> {
   }
 
 
+  _onError(_error){
+    debugPrint(_error.toString());
+  }
 
   void sendSms() async {
     SmsSender _messageSender = new SmsSender();
     String address = _contactStringBehavior.value;
-    final List<String> _contactList = address.split('\n');
-    final SimCard _selectedSim = await _selectSim();
+    address.replaceAll('\n', '');
+    address.replaceAll(' ', '');
+    final List<String> _contactList = address.split(',');
     final String _messageData = messageController.text;
     for (int i = 0; i < _contactList.length; i++) {
       final _contactNumber = _contactList[i];
-      debugPrint(_contactNumber);
       if (_contactNumber != null && _contactNumber.isNotEmpty) {
-        _smsStatusSendBehavior.sink.add('sending SMS to $_contactNumber');
         final _message = SmsMessage(_contactNumber, _messageData);
-        await _messageSender.sendSms(_message, simCard: _selectedSim);
+        _message.onStateChanged.listen((state) {
+          if(state == SmsMessageState.Sent){
+            Navigator.pushNamed(context, AppData.pageRoutSent, arguments: {'number': _contactNumber});
+          }
+        });
+        await _messageSender.sendSms(_message).catchError(_onError);
       }
     }
   }
@@ -70,11 +70,6 @@ class _SmsState extends State<SmsWidget> {
   Future<SimCard> _selectSim() async {
     SimCardsProvider sim = new SimCardsProvider();
     List<SimCard> card = await sim.getSimCards();
-    card.forEach((element) {
-      debugPrint(element.imei);
-    });
-
-    print(card.toString());
     return card.last;
   }
 
@@ -86,36 +81,52 @@ class _SmsState extends State<SmsWidget> {
           title: Text('SMS SENDER'),
         ),
         body: Column(children: <Widget>[
-          TextField(
-            controller: messageController,
-            decoration: InputDecoration(
-                border: InputBorder.none, hintText: 'Enter message'),
+          Container(
+            padding: EdgeInsets.all(24),
+            child: TextField(
+              minLines: 3,
+              maxLines: 4,
+              autofocus: false,
+              controller: messageController,
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.lightBlueAccent, width: 2),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black45, width: 1),
+                ),
+                hintText: 'Enter message',
+              ),
+            ),
           ),
-          Text('Message will be sent to the following contacts.\n'),
-          StreamBuilder<String>(
-            stream: _contactStringBehavior.stream,
-            builder: (final context, final snapshot) {
-              if (snapshot.hasData) {
-                return Text(snapshot.data);
-              }
+          Container(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: <Widget>[
+                Text('Recipients: \n',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
 
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            },
+                StreamBuilder<String>(
+                  stream: _contactStringBehavior.stream,
+                  builder: (final context, final snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(snapshot.data.replaceAll('\n', ''));
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
-          StreamBuilder<String>(
-            stream: _smsStatusSendBehavior.stream,
-            builder: (_context, _snap) {
-              if (_snap.hasData) {
-                return Center(
-                  child: Text(_snap.data),
-                );
-              }
-              return SizedBox();
-            },
-          )
-        ]),
+        ],
+        ),
+
         floatingActionButton: FloatingActionButton.extended(
           tooltip: 'Press to send sms',
           icon: Icon(Icons.send),
