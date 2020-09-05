@@ -46,26 +46,9 @@ class _NumberPickerState extends State<NumberPickerWidget> {
       allowedExtensions: ['txt'],
     );
 
-    //String contact = await files.readAsString(); //provide filepath
-    //contact.split('\n').forEach((number) {
-    //sender.sendSms(new SmsMessage(number, myController.text));
-    //});
     if (files != null) {
       Navigator.pushNamed(context, AppData.pageRoutSendSms,
           arguments: {'file': files});
     }
-
-    /*
-    FilePicker.getFile(
-      type: FileType.custom,
-      allowedExtensions: ['txt'],
-    ).then((file) {
-      Navigator.pushNamed(context, AppData.pageRoutSendSms, arguments: {
-        'file': file,
-        'name': 'sagor',
-        'simiple_array': ['mony', 10, 11.1]
-      });
-    });
-    */
   }
 }

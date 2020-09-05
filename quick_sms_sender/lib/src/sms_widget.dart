@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:quick_sms_sender/src/app_data.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'package:sms/sms.dart';

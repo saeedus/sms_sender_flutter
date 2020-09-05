@@ -15,7 +15,6 @@ class _LaunchScreenState extends State<LaunchScreenWidget> {
     super.initState();
     Future.delayed(Duration(seconds: 1), () {
       Navigator.pushReplacementNamed(context, AppData.pageRoutePicker);
-      // pushNamed(context, AppData.pageRoutePicker);
     });
   }
 
