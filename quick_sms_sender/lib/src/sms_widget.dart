@@ -47,22 +47,9 @@ class _SmsState extends State<SmsWidget> {
     String contacts = await _file.readAsString();
     _contactStringBehavior.sink.add(contacts);
     debugPrint(_contactStringBehavior.value ?? '');
-
-    // Future.delayed(Duration(seconds: 1), () async {
-    //   final File _file = this.widget.data['file'];
-    //   String contacts = await _file.readAsString();
-    //   _contactStringBehavior.sink.add(contacts);
-    //   debugPrint(_contactStringBehavior.value ?? '');
-    // });
   }
 
-  // void sendSms() {
-  //   SmsSender sender = new SmsSender();
-  //   String c = _contactStringBehavior.value;
-  //   c.split('\n').forEach((number) {
-  //     sender.sendSms(new SmsMessage(number, messageController.text));
-  //   });
-  // }
+
 
   void sendSms() async {
     SmsSender _messageSender = new SmsSender();
@@ -79,20 +66,6 @@ class _SmsState extends State<SmsWidget> {
         await _messageSender.sendSms(_message, simCard: _selectedSim);
       }
     }
-    // Navigator.pushNamed(context, AppData.pageRoutSent);
-    // address.split('\n').forEach((element) {
-    //   SmsMessage message = new SmsMessage(element, messageController.text);
-    //   message.onStateChanged.listen((state) {
-    //     if (state == SmsMessageState.Sent) {
-    //       Navigator.pushNamed(context, AppData.pageRoutSent);
-    //       print("SMS is sent!");
-    //     } else if (state == SmsMessageState.Delivered) {
-    //       print("SMS is delivered!");
-    //     }
-    //   });
-    //   SimCard simInfo = await selectSim();
-    //   simInfo.then((value) => sender.sendSms(message, simCard: value));
-    // });
   }
 
   Future<SimCard> _selectSim() async {
@@ -130,24 +103,6 @@ class _SmsState extends State<SmsWidget> {
               return Center(
                 child: CircularProgressIndicator(),
               );
-              // if (snapshot.hasError) {
-              //   return Text('Error: ${snapshot.error}');
-              // }
-              // switch (snapshot.connectionState) {
-              //   case ConnectionState.none:
-              //     return Text('No file selected');
-              //     break;
-              //   case ConnectionState.waiting:
-              //     return CircularProgressIndicator();
-              //     break;
-              //   case ConnectionState.active:
-              //     return Text(data);
-              //     break;
-              //   case ConnectionState.done:
-              //     return Text(data);
-              //     break;
-              // }
-              // return Text(data);
             },
           ),
           StreamBuilder<String>(
