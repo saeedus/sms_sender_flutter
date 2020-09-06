@@ -63,11 +63,14 @@ class _SmsState extends State<SmsWidget> {
       if (_contactNumber != null && _contactNumber.isNotEmpty) {
         final _message = SmsMessage(_contactNumber, _messageData);
         final StreamSubscription _t = _message.onStateChanged.listen((state) {
-          if (state == SmsMessageState.Sent) {
-            Navigator.pushNamed(context, AppData.pageRoutSent).then((value) =>
-                _list.forEach((element) {
-                  element.cancel();
-                }),);
+          if(state == SmsMessageState.Sent && i == _contactList.length - 1){
+            Navigator.pushNamed(context, AppData.pageRoutSent);
+            // final _subscriber = _list.removeLast();
+            // _subscriber.cancel();
+            // debugPrint(state.toString());
+            // if(_list.isEmpty) {
+            //   Navigator.pushNamed(context, AppData.pageRoutSent);
+            // }
           }
         });
         _list.add(_t);
