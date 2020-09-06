@@ -15,7 +15,17 @@ class _SmsDeliveredState extends State<SmsDelivered> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('STATUS'),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text('Quick Message',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontStyle: FontStyle.italic,
+              fontSize: 18,
+              color: Colors.blue,
+            ),
+          ),
+          centerTitle: true,
         ),
         body: Center(
           child: Text('Message sent successfully!',

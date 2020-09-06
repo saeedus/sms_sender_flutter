@@ -19,14 +19,16 @@ class _SmsState extends State<SmsWidget> {
   final messageController = TextEditingController();
   final _simCardProvider = new SimCardsProvider();
   SimCard _simCard;
-
+  int selectedRadio;
+  String contacts;
 
   //streambuilder's behavioursubject
   final BehaviorSubject<String> _contactStringBehavior = BehaviorSubject();
+
   @override
   void initState() {
     super.initState();
-
+    selectedRadio = 0;
     _readContactString();
   }
 
@@ -39,12 +41,12 @@ class _SmsState extends State<SmsWidget> {
   void _readContactString() async {
     final File _file = this.widget.data['file'];
     String contacts = await _file.readAsString();
+    print(contacts);
     _contactStringBehavior.sink.add(contacts);
-    debugPrint(_contactStringBehavior.value ?? '');
   }
 
 
-  _onError(_error){
+  _onError(_error) {
     debugPrint(_error.toString());
   }
 
@@ -60,14 +62,17 @@ class _SmsState extends State<SmsWidget> {
       final _contactNumber = _contactList[i];
       if (_contactNumber != null && _contactNumber.isNotEmpty) {
         final _message = SmsMessage(_contactNumber, _messageData);
-       final StreamSubscription _t = _message.onStateChanged.listen((state) {
-
-          if(state == SmsMessageState.Sent){
-            Navigator.pushNamed(context, AppData.pageRoutSent).then((value) => _list.forEach((element) {element.cancel();}),);
+        final StreamSubscription _t = _message.onStateChanged.listen((state) {
+          if (state == SmsMessageState.Sent) {
+            Navigator.pushNamed(context, AppData.pageRoutSent).then((value) =>
+                _list.forEach((element) {
+                  element.cancel();
+                }),);
           }
         });
-       _list.add(_t);
-        await _messageSender.sendSms(_message, simCard: _simCard).catchError(_onError);
+        _list.add(_t);
+        await _messageSender.sendSms(_message, simCard: _simCard).catchError(
+            _onError);
       }
     }
   }
@@ -78,100 +83,142 @@ class _SmsState extends State<SmsWidget> {
   }
 
 
-
   void loadSimCardTwo() async {
     List<SimCard> _cards = await _simCardProvider.getSimCards();
-    setState(() {
       _simCard = _cards.last;
-    });
-    //_simCard = _cards.last;
+  }
+
+  void simSelect() {
+    if(selectedRadio == 1) {
+      loadSimCardOne();
+      print(selectedRadio);
+    }
+    else if(selectedRadio == 2){
+      loadSimCardTwo();
+      print(selectedRadio);
+    }
   }
 
 
+// Changes the selected value on 'onChanged' click on each radio button
+  setSelectedRadio(int simVal) {
+    setState(() {
+      selectedRadio = simVal;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('SMS SENDER'),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: Text('Quick Message',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontStyle: FontStyle.italic,
+              fontSize: 18,
+              color: Colors.blue,
+            ),
+          ),
+          centerTitle: true,
         ),
-        body: Column(children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(24),
-            child: TextField(
-              minLines: 3,
-              maxLines: 4,
-              autofocus: false,
-              controller: messageController,
-              decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.lightBlueAccent, width: 2),
+
+        body: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(6),
+              child: TextField(
+                maxLines: 5,
+                autofocus: false,
+                controller: messageController,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black54, width: 1),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black12, width: 1),
+                  ),
+                  hintText: 'Enter message',
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black45, width: 1),
-                ),
-                hintText: 'Enter message',
               ),
             ),
-          ),
 
-          Align(
-            alignment: Alignment.center,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            SizedBox(height: 24),
+
+            //radiobutton
+            ButtonBar(
+              alignment: MainAxisAlignment.center,
               children: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    loadSimCardOne();
+                Text('SIM 1'),
+                Radio(
+                  value: 1,
+                  groupValue: selectedRadio,
+                  activeColor: Colors.green,
+                  onChanged: (val) {
+                    setSelectedRadio(val);
+                    simSelect();
                   },
-                  color: Colors.lightBlueAccent,
-                  child: Text('SIM 1',
-                    style: TextStyle(fontSize: 15),
-                  ),
                 ),
-                FlatButton(
-                  onPressed: () {
-                    loadSimCardTwo();
+                Radio(
+                  value: 2,
+                  groupValue: selectedRadio,
+                  activeColor: Colors.blue,
+                  onChanged: (val) {
+                    print("Radio $val");
+                    setSelectedRadio(val);
+                    simSelect();
                   },
-                  color: Colors.greenAccent,
-                  child: Text('SIM 2',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                )
+                ),
+                Text('SIM 2'),
               ],
             ),
-          ),
 
+            SizedBox(height: 24),
 
-          Container(
-            padding: EdgeInsets.all(10),
-            child: Column(
-              children: <Widget>[
-                Text('Recipients: \n',
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                StreamBuilder<String>(
-                  stream: _contactStringBehavior.stream,
-                  builder: (final context, final snapshot) {
-                    if (snapshot.hasData) {
-                      return Text(snapshot.data.replaceAll('\n', ''));
-                    }
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                ),
-              ],
+            Text('Recipients:',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
 
-        ],
+            SizedBox(height: 10),
+
+            StreamBuilder<String>(
+              stream: _contactStringBehavior.stream,
+              builder: (final context, final snapshot) {
+                if (snapshot.hasData) {
+                  final String contacts = snapshot.data.replaceAll('\n', '');
+                  final List<String> _data = contacts.replaceAll(' ', '').split(',');
+                  return Expanded(
+                    child: ListView.builder(
+                      padding: const EdgeInsets.all(8),
+                      itemCount: _data.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                          height: 24,
+                          color: Colors.white,
+                          child: Center(
+                            child: Text(
+                              '${_data[index]}'
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              },
+            ),
+
+          ],
         ),
+
 
         floatingActionButton: FloatingActionButton.extended(
           tooltip: 'Press to send sms',
@@ -181,6 +228,7 @@ class _SmsState extends State<SmsWidget> {
             sendSms();
           },
         ),
+
       ),
     );
   }

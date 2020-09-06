@@ -18,7 +18,17 @@ class _NumberPickerState extends State<NumberPickerWidget> {
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
-            title: Text('PICK A FILE'),
+            backgroundColor: Colors.white,
+            elevation: 1,
+            title: Text('Quick Message',
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                fontStyle: FontStyle.italic,
+                fontSize: 18,
+                color: Colors.blue,
+              ),
+            ),
+            centerTitle: true,
           ),
           body: Container(
             child: Center(
