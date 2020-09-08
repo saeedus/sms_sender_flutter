@@ -24,6 +24,7 @@ dependencies:
   sms: ^0.2.0
   rxdart: ^0.24.1
   file_picker: ^1.13.3
+  contacts_service: ^0.4.6
   flutter:
     sdk: flutter
 

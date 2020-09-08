@@ -111,6 +111,14 @@ class _SmsState extends State<SmsWidget> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
+          leading: IconButton(
+            color: Colors.blue,
+            tooltip: 'Previous page',
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
           title: Text('Quick Message',
             style: TextStyle(
               fontWeight: FontWeight.normal,
@@ -132,17 +140,21 @@ class _SmsState extends State<SmsWidget> {
                 controller: messageController,
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black54, width: 1),
+                    borderSide: BorderSide(color: Colors.black12, width: 2),
+                    borderRadius: const BorderRadius.all(const Radius.circular(15)),
+
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12, width: 1),
+                    borderSide: BorderSide(color: Colors.black26, width: 2),
+                    borderRadius: const BorderRadius.all(const Radius.circular(15)),
+
                   ),
-                  hintText: 'Enter message',
+                  hintText: 'Enter message...',
                 ),
               ),
             ),
 
-            SizedBox(height: 24),
+            SizedBox(height: 18),
 
             //radiobutton
             ButtonBar(
@@ -172,7 +184,7 @@ class _SmsState extends State<SmsWidget> {
               ],
             ),
 
-            SizedBox(height: 24),
+            SizedBox(height: 18),
 
             Text('Recipients:',
               style: TextStyle(
@@ -181,7 +193,7 @@ class _SmsState extends State<SmsWidget> {
               ),
             ),
 
-            SizedBox(height: 10),
+            SizedBox(height: 5),
 
             StreamBuilder<String>(
               stream: _contactStringBehavior.stream,
@@ -195,7 +207,7 @@ class _SmsState extends State<SmsWidget> {
                       itemCount: _data.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Padding(
-                          padding: const EdgeInsets.only(top: 12,),
+                          padding: const EdgeInsets.only(top: 12),
                           child: Container(
 
                             decoration: BoxDecoration(
