@@ -28,7 +28,7 @@ class _SmsState extends State<SmsWidget> {
   @override
   void initState() {
     super.initState();
-    selectedRadio = 0;
+    selectedRadio = 1;
     _readContactString();
   }
 
@@ -65,12 +65,6 @@ class _SmsState extends State<SmsWidget> {
         final StreamSubscription _t = _message.onStateChanged.listen((state) {
           if(state == SmsMessageState.Sent && i == _contactList.length - 1){
             Navigator.pushNamed(context, AppData.pageRoutSent);
-            // final _subscriber = _list.removeLast();
-            // _subscriber.cancel();
-            // debugPrint(state.toString());
-            // if(_list.isEmpty) {
-            //   Navigator.pushNamed(context, AppData.pageRoutSent);
-            // }
           }
         });
         _list.add(_t);
@@ -207,13 +201,6 @@ class _SmsState extends State<SmsWidget> {
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.all(Radius.circular(4)),
-
-                              // BoxDecorationrationorderRadius.only(
-                              //     topLeft: Radius.circular(10),
-                              //     topRight: Radius.circular(10),
-                              //     bottomLeft: Radius.circular(10),
-                              //     bottomRight: Radius.circular(10)
-                              // ),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.15),
