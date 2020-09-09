@@ -47,14 +47,13 @@ class _NumberPickerState extends State<NumberPickerWidget> {
             children: <Widget>[
               RaisedButton(
                 color: Colors.transparent,
-                highlightElevation: 0,
                 elevation: 0,
                 onPressed: _pickFile,
                 textColor: Colors.white70,
                 padding: const EdgeInsets.all(0.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(18)),
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
                     gradient: LinearGradient(
                       colors: <Color>[
                         Colors.blueAccent,
@@ -77,17 +76,15 @@ class _NumberPickerState extends State<NumberPickerWidget> {
 
               RaisedButton(
                 color: Colors.transparent,
-                highlightElevation: 0,
                 elevation: 0,
                 onPressed: () {
-                  // _pickContact();
-                  // Navigator.pushNamed(context, AppData.pageRoutContactSelect);
+                  _pickContact();
                 },
                 textColor: Colors.white70,
                 padding: const EdgeInsets.all(0.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(18)),
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
                     gradient: LinearGradient(
                         colors: <Color>[
                           Colors.pink[600],
@@ -124,11 +121,11 @@ class _NumberPickerState extends State<NumberPickerWidget> {
     }
   }
 
-  //not done yet
   void _pickContact() async{
-    Iterable<Contact> contacts = await ContactsService.getContacts();
-    contacts.forEach((element) {
-      print(element);
-    });
+    Iterable<Contact> contacts = await ContactsService.getContacts(withThumbnails: false);
+    if(contacts != null) {
+      Navigator.pushNamed(context, AppData.pageRoutContactSelect,
+        arguments: {'contact': contacts});
+    }
   }
 }

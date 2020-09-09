@@ -18,12 +18,10 @@ class SmsWidget extends StatefulWidget {
 class _SmsState extends State<SmsWidget> {
   final messageController = TextEditingController();
   final _simCardProvider = new SimCardsProvider();
+  final BehaviorSubject<String> _contactStringBehavior = BehaviorSubject();
   SimCard _simCard;
   int selectedRadio;
   String contacts;
-
-  //streambuilder's behavioursubject
-  final BehaviorSubject<String> _contactStringBehavior = BehaviorSubject();
 
   @override
   void initState() {
@@ -41,7 +39,7 @@ class _SmsState extends State<SmsWidget> {
   void _readContactString() async {
     final File _file = this.widget.data['file'];
     String contacts = await _file.readAsString();
-    print(contacts);
+    debugPrint(contacts);
     _contactStringBehavior.sink.add(contacts);
   }
 
@@ -253,7 +251,7 @@ class _SmsState extends State<SmsWidget> {
 
 
         floatingActionButton: FloatingActionButton.extended(
-          tooltip: 'Press to send sms',
+          tooltip: 'Send message',
           icon: Icon(Icons.send),
           label: Text('SEND'),
           onPressed: () {

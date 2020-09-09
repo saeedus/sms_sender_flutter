@@ -4,6 +4,8 @@
 ///-then from sms_widget sms will be sent using already existing code.
 
 import 'package:flutter/material.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:contacts_service/contacts_service.dart';
 
 class SelectContact extends StatefulWidget {
   final Map contacts;
@@ -15,6 +17,18 @@ class SelectContact extends StatefulWidget {
 }
 
 class _SelectContactState extends State<SelectContact> {
+  final BehaviorSubject _readContacts = BehaviorSubject();
+
+  void readContacts() {
+    final Iterable<Contact> _contacts = this.widget.contacts['contact'];
+    _contacts.forEach((element) {
+      debugPrint(element.displayName);
+      element.phones.forEach((number) {
+        debugPrint(number.value);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -39,6 +53,14 @@ class _SelectContactState extends State<SelectContact> {
             ),
           ),
           centerTitle: true,
+        ),
+
+
+        floatingActionButton: FloatingActionButton.extended(
+          tooltip: 'Send message',
+          icon: Icon(Icons.send),
+          label: Text('SEND'),
+          onPressed: readContacts,
         ),
       ),
     );
