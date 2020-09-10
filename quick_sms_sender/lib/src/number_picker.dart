@@ -77,9 +77,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
               RaisedButton(
                 color: Colors.transparent,
                 elevation: 0,
-                onPressed: () {
-                  _pickContact();
-                },
+                onPressed: _pickContact,
                 textColor: Colors.white70,
                 padding: const EdgeInsets.all(0.0),
                 child: Container(

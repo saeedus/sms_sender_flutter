@@ -94,8 +94,6 @@ class _SmsState extends State<SmsWidget> {
     }
   }
 
-
-// Changes the selected value on 'onChanged' click on each radio button
   setSelectedRadio(int simVal) {
     setState(() {
       selectedRadio = simVal;
@@ -207,7 +205,6 @@ class _SmsState extends State<SmsWidget> {
                         return Padding(
                           padding: const EdgeInsets.only(top: 12),
                           child: Container(
-
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.all(Radius.circular(4)),
@@ -216,12 +213,10 @@ class _SmsState extends State<SmsWidget> {
                                   color: Colors.grey.withOpacity(0.15),
                                   spreadRadius: 1.5,
                                   blurRadius: 2,
-                                  // offset: Offset(0, 3), // changes position of shadow
                                 ),
                               ],
                             ),
                             height: 35,
-                            // color: Colors.white,
                             child: Padding(
                               padding: EdgeInsets.only(left: 12),
                               child: Row(

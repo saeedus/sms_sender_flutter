@@ -17,16 +17,19 @@ class SelectContact extends StatefulWidget {
 }
 
 class _SelectContactState extends State<SelectContact> {
-  final BehaviorSubject _readContacts = BehaviorSubject();
+  final BehaviorSubject<Iterable<Contact>> _readContactsStream = BehaviorSubject();
+  List<bool> _isChecked = List.filled(100, false);
 
-  void readContacts() {
+  @override
+  void initState() {
+    super.initState();
     final Iterable<Contact> _contacts = this.widget.contacts['contact'];
-    _contacts.forEach((element) {
-      debugPrint(element.displayName);
-      element.phones.forEach((number) {
-        debugPrint(number.value);
-      });
-    });
+    _readContactsStream.sink.add(_contacts);
+  }
+
+  void dispose() {
+    super.dispose();
+    _readContactsStream.close();
   }
 
   @override
@@ -55,12 +58,49 @@ class _SelectContactState extends State<SelectContact> {
           centerTitle: true,
         ),
 
+        body: StreamBuilder<Iterable<Contact>>(
+          stream: _readContactsStream.stream,
+          builder: (final context, final snapshot) {
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    title: Text(snapshot.data.elementAt(index).displayName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 18,
+                      ),
+                    ),
+
+                    subtitle: CheckboxListTile(
+                      value: _isChecked[index],
+                      onChanged: (bool value) {
+                        setState(() {
+                          _isChecked[index] = value;
+                        });
+                      },
+                      title: Text(snapshot.data.elementAt(index).phones.elementAt(0).value,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+
+                  );
+                },
+              );
+          },
+        ),
 
         floatingActionButton: FloatingActionButton.extended(
           tooltip: 'Send message',
           icon: Icon(Icons.send),
           label: Text('SEND'),
-          onPressed: readContacts,
+          onPressed: () {
+
+          }
         ),
       ),
     );
