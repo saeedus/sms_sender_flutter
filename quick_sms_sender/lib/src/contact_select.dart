@@ -62,7 +62,6 @@ class _SelectContactState extends State<SelectContact> {
           stream: _readContactsStream.stream,
           builder: (final context, final snapshot) {
               return ListView.builder(
-                shrinkWrap: true,
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
                   return ListTile(
@@ -73,21 +72,27 @@ class _SelectContactState extends State<SelectContact> {
                       ),
                     ),
 
-                    subtitle: CheckboxListTile(
-                      value: _isChecked[index],
-                      onChanged: (bool value) {
-                        setState(() {
-                          _isChecked[index] = value;
-                        });
+                    subtitle: ListView.builder(
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data.elementAt(index).phones.length,
+                      itemBuilder: (BuildContext context, int nestedIndex) {
+                        return CheckboxListTile(
+                          value: _isChecked[nestedIndex],
+                          onChanged: (bool value) {
+                            setState(() {
+                              _isChecked[nestedIndex] = value;
+                            });
+                          },
+                          title: Text(snapshot.data.elementAt(index).phones.elementAt(nestedIndex).value,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w300,
+                              fontSize: 14,
+                          ),
+                          ),
+                        );
                       },
-                      title: Text(snapshot.data.elementAt(index).phones.elementAt(0).value,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 14,
-                        ),
-                      ),
                     ),
-
                   );
                 },
               );
