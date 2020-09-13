@@ -108,19 +108,19 @@ class _SmsState extends State<SmsWidget> {
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-            color: Colors.blue,
+            color: Colors.black54,
             tooltip: 'Previous page',
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
-          title: Text('Quick Message',
+          title: Text(
+            'Quick Message',
             style: TextStyle(
               fontWeight: FontWeight.normal,
-              fontStyle: FontStyle.italic,
-              fontSize: 18,
-              color: Colors.blue,
+              fontSize: 20,
+              color: Colors.black54,
             ),
           ),
           centerTitle: true,

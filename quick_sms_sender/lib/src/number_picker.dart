@@ -22,24 +22,19 @@ class _NumberPickerState extends State<NumberPickerWidget> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          leading: IconButton(
-            tooltip: 'Exit app',
-            color: Colors.blue,
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              SystemNavigator.pop();
-            },
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Quick Message',
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  fontSize: 20,
+                  color: Colors.black54,
+                ),
+              ),
+            ],
           ),
-          title: Text(
-            'Quick Message',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontStyle: FontStyle.italic,
-              fontSize: 18,
-              color: Colors.blue,
-            ),
-          ),
-          centerTitle: true,
         ),
         body: Center(
           child: Column(
@@ -121,7 +116,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
 
   void _pickContact() async{
     Iterable<Contact> contacts = await ContactsService.getContacts(withThumbnails: false);
-    if(contacts != null) {
+    if(contacts != null ) {
       Navigator.pushNamed(context, AppData.pageRoutContactSelect,
         arguments: {'contact': contacts});
     }

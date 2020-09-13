@@ -18,14 +18,19 @@ class SelectContact extends StatefulWidget {
 
 class _SelectContactState extends State<SelectContact> {
   final BehaviorSubject<Iterable<Contact>> _readContactsStream = BehaviorSubject();
-  List<bool> _isChecked = List.filled(100, false);
+  List<bool> _isChecked = List<bool>();
+  int j = 0;
 
   @override
   void initState() {
     super.initState();
     final Iterable<Contact> _contacts = this.widget.contacts['contact'];
     _readContactsStream.sink.add(_contacts);
+    for(int i = 0; i < _contacts.length; i++) {
+      _isChecked.add(false);
+    }
   }
+
 
   void dispose() {
     super.dispose();
@@ -40,19 +45,19 @@ class _SelectContactState extends State<SelectContact> {
           backgroundColor: Colors.white,
           elevation: 0,
           leading: IconButton(
-            color: Colors.blue,
+            color: Colors.black54,
             tooltip: 'Previous page',
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pop();
             },
           ),
-          title: Text('Quick Message',
+          title: Text(
+            'Quick Message',
             style: TextStyle(
               fontWeight: FontWeight.normal,
-              fontStyle: FontStyle.italic,
-              fontSize: 18,
-              color: Colors.blue,
+              fontSize: 20,
+              color: Colors.black54,
             ),
           ),
           centerTitle: true,
