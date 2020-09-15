@@ -9,6 +9,7 @@ import 'package:sms/sms.dart';
 class SmsWidget extends StatefulWidget {
   final Map data;
   SmsWidget(this.data);
+
   @override
   State<StatefulWidget> createState() {
     return _SmsState();
@@ -37,10 +38,10 @@ class _SmsState extends State<SmsWidget> {
   }
 
   void _readContactString() async {
-    final File _file = this.widget.data['file'];
-    String contacts = await _file.readAsString();
-    debugPrint(contacts);
-    _contactStringBehavior.sink.add(contacts);
+      final File _file = this.widget.data['file'];
+      String contacts = await _file.readAsString();
+      debugPrint(contacts);
+      _contactStringBehavior.sink.add(contacts);
   }
 
 
@@ -253,7 +254,6 @@ class _SmsState extends State<SmsWidget> {
             sendSms();
           },
         ),
-
       ),
     );
   }

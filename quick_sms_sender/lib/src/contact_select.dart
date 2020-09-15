@@ -6,6 +6,8 @@
 import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:sms/sms.dart';
+
 
 class SelectContact extends StatefulWidget {
   final Map contacts;
@@ -19,7 +21,7 @@ class SelectContact extends StatefulWidget {
 class _SelectContactState extends State<SelectContact> {
   final BehaviorSubject<Iterable<Contact>> _readContactsStream = BehaviorSubject();
   List<bool> _isChecked = List<bool>();
-  int j = 0;
+  List<String> _selectedContacts = List<String>();
 
   @override
   void initState() {
@@ -31,10 +33,19 @@ class _SelectContactState extends State<SelectContact> {
     }
   }
 
-
   void dispose() {
     super.dispose();
     _readContactsStream.close();
+  }
+
+  //hardcoded
+  void sendSMS() {
+    SmsSender sender = SmsSender();
+    if(_selectedContacts != null) {
+      _selectedContacts.forEach((number) {
+        sender.sendSms(SmsMessage(number, 'hi'));
+      });
+    }
   }
 
   @override
@@ -69,35 +80,18 @@ class _SelectContactState extends State<SelectContact> {
               return ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    title: Text(snapshot.data.elementAt(index).displayName,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 18,
-                      ),
-                    ),
-
-                    subtitle: ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: snapshot.data.elementAt(index).phones.length,
-                      itemBuilder: (BuildContext context, int nestedIndex) {
-                        return CheckboxListTile(
-                          value: _isChecked[nestedIndex],
-                          onChanged: (bool value) {
-                            setState(() {
-                              _isChecked[nestedIndex] = value;
-                            });
-                          },
-                          title: Text(snapshot.data.elementAt(index).phones.elementAt(nestedIndex).value,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 14,
-                          ),
-                          ),
-                        );
-                      },
-                    ),
+                  return CheckboxListTile(
+                    value: _isChecked[index],
+                    title: Text(snapshot.data.elementAt(index).displayName),
+                    onChanged: (bool value) {
+                        if(value == true) {
+                          setState(() {
+                            _isChecked[index] = true;
+                            _selectedContacts.add(snapshot.data.elementAt(index).phones.elementAt(0).value);
+                          });
+                        }
+                        print(_selectedContacts);
+                    },
                   );
                 },
               );
@@ -109,8 +103,8 @@ class _SelectContactState extends State<SelectContact> {
           icon: Icon(Icons.send),
           label: Text('SEND'),
           onPressed: () {
-
-          }
+            sendSMS();
+          },
         ),
       ),
     );
