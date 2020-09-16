@@ -249,7 +249,12 @@ class _SmsState extends State<SmsWidget> {
                   );
                 }
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: 12),
+                      CircularProgressIndicator(),
+                    ],
+                  ),
                 );
               },
             ),

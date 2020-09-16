@@ -35,6 +35,10 @@ class _NumberPickerState extends State<NumberPickerWidget> {
     }
   }
 
+  void _prevContacts() {
+    Navigator.pushNamed(context, AppData.pageRoutSendSms);
+}
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -127,7 +131,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
                   return Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      borderRadius: BorderRadius.all(Radius.circular(24)),
                       // color: Colors.blue[100],
                       color: Colors.grey[200],
                     ),
@@ -144,7 +148,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
                           ),
                           SizedBox(height: 10),
                           Text(
-                            '+8801842220598\n+8801531723118\n+8801521534263\n          ...',
+                            '+8801842220598\n+8801531723118\n+8801521534263\n              ...',
                             style: TextStyle(
                               fontSize: 12,
                               color: Colors.black26,
@@ -155,7 +159,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0)),
                             child: Text('View'),
-                            onPressed: () {},
+                            onPressed: _prevContacts,
                           ),
                         ],
                       ),
