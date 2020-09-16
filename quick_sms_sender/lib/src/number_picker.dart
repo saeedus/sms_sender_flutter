@@ -14,7 +14,6 @@ class NumberPickerWidget extends StatefulWidget {
 }
 
 class _NumberPickerState extends State<NumberPickerWidget> {
-
   void _pickFile() async {
     File files = await FilePicker.getFile(
       type: FileType.custom,
@@ -27,9 +26,10 @@ class _NumberPickerState extends State<NumberPickerWidget> {
     }
   }
 
-  void _pickContact() async{
-    Iterable<Contact> contacts = await ContactsService.getContacts(withThumbnails: false);
-    if(contacts != null ) {
+  void _pickContact() async {
+    Iterable<Contact> contacts =
+        await ContactsService.getContacts(withThumbnails: false);
+    if (contacts != null) {
       Navigator.pushNamed(context, AppData.pageRoutContactSelect,
           arguments: {'contact': contacts});
     }
@@ -56,67 +56,115 @@ class _NumberPickerState extends State<NumberPickerWidget> {
             ],
           ),
         ),
-        body: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              RaisedButton(
-                color: Colors.transparent,
-                elevation: 0,
-                onPressed: _pickFile,
-                textColor: Colors.white70,
-                padding: const EdgeInsets.all(0.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                    gradient: LinearGradient(
-                      colors: <Color>[
-                        Colors.blueAccent,
-                        Colors.lightBlue,
-                        Colors.lightBlueAccent
-                      ]
-                    ),
-                  ),
-                  padding: EdgeInsets.all(18),
-                  child: Text('Choose file',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-
-              SizedBox(height: 12),
-
-              RaisedButton(
-                color: Colors.transparent,
-                elevation: 0,
-                onPressed: _pickContact,
-                textColor: Colors.white70,
-                padding: const EdgeInsets.all(0.0),
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(12)),
-                    gradient: LinearGradient(
-                        colors: <Color>[
-                          Colors.pink[600],
-                          Colors.pink[400],
-                          Colors.pink[300],
-                        ]
-                    ),
-                  ),
-                  padding: EdgeInsets.all(18),
-                  child: Text('Choose contact',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+        body: Column(
+          children: <Widget>[
+            SizedBox(height: 72),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                ButtonTheme(
+                  minWidth: 160,
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(12.0)),
+                    color: Colors.blue,
+                    textColor: Colors.white70,
+                    onPressed: _pickFile,
+                    padding: const EdgeInsets.all(0.0),
+                    child: Container(
+                      padding: EdgeInsets.all(18),
+                      child: Text(
+                        'Choose file',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
                 ),
+                SizedBox(height: 12),
+                RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(12.0)),
+                  color: Colors.red,
+                  textColor: Colors.white70,
+                  padding: const EdgeInsets.all(0.0),
+                  onPressed: _pickContact,
+                  child: Container(
+                    padding: EdgeInsets.all(18),
+                    child: Text(
+                      'Choose contact',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 84),
+            Text(
+              'Previously sent:',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[600],
               ),
-            ],
-          ),
+            ),
+            SizedBox(height: 12),
+            Expanded(
+              child: GridView.builder(
+                shrinkWrap: true,
+                padding: const EdgeInsets.all(20),
+                itemCount: 12,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 10,
+                    crossAxisSpacing: 10),
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      // color: Colors.blue[100],
+                      color: Colors.grey[200],
+                    ),
+                    child: Center(
+                      child: Column(
+                        children: <Widget>[
+                          Text(
+                            'Group 1',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black38,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Text(
+                            '+8801842220598\n+8801531723118\n+8801521534263\n          ...',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.black26,
+                            ),
+                          ),
+                          FlatButton(
+                            color: Colors.white70,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)),
+                            child: Text('View'),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
+          ],
         ),
       ),
     );

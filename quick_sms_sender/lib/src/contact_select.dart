@@ -45,16 +45,6 @@ class _SelectContactState extends State<SelectContact> {
     _readContactsStream.close();
   }
 
-  // hardcoded
-  // void sendSMS() {
-  //   SmsSender sender = SmsSender();
-  //   if (_selectedContacts != null) {
-  //     _selectedContacts.forEach((number) {
-  //       sender.sendSms(SmsMessage(number, 'hi'));
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -115,9 +105,8 @@ class _SelectContactState extends State<SelectContact> {
           },
         ),
         floatingActionButton: FloatingActionButton.extended(
-          tooltip: 'Send message',
-          icon: Icon(Icons.send),
-          label: Text('SEND'),
+          icon: Icon(Icons.done),
+          label: Text('DONE'),
           onPressed: sendContacts,
         ),
       ),
