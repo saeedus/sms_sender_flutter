@@ -37,13 +37,22 @@ class _SmsState extends State<SmsWidget> {
     _contactStringBehavior.close();
   }
 
+  ///if file a .txt file is chosen it'll read from the file
+  ///else, it'll read from the selected contacts
   void _readContactString() async {
+    if (this.widget.data['file'] != null) {
       final File _file = this.widget.data['file'];
       String contacts = await _file.readAsString();
       debugPrint(contacts);
       _contactStringBehavior.sink.add(contacts);
+    } else {
+      final List<String> _numbers = this.widget.data['selectedNums'];
+      String contacts = _numbers.join(",");
+      _contactStringBehavior.sink.add(contacts);
+      print('NUMBERS ARE HERE');
+      print(_numbers);
+    }
   }
-
 
   _onError(_error) {
     debugPrint(_error.toString());
@@ -62,13 +71,14 @@ class _SmsState extends State<SmsWidget> {
       if (_contactNumber != null && _contactNumber.isNotEmpty) {
         final _message = SmsMessage(_contactNumber, _messageData);
         final StreamSubscription _t = _message.onStateChanged.listen((state) {
-          if(state == SmsMessageState.Sent && i == _contactList.length - 1){
+          if (state == SmsMessageState.Sent && i == _contactList.length - 1) {
             Navigator.pushNamed(context, AppData.pageRoutSent);
           }
         });
         _list.add(_t);
-        await _messageSender.sendSms(_message, simCard: _simCard).catchError(
-            _onError);
+        await _messageSender
+            .sendSms(_message, simCard: _simCard)
+            .catchError(_onError);
       }
     }
   }
@@ -78,18 +88,16 @@ class _SmsState extends State<SmsWidget> {
     _simCard = _cards.first;
   }
 
-
   void loadSimCardTwo() async {
     List<SimCard> _cards = await _simCardProvider.getSimCards();
-      _simCard = _cards.last;
+    _simCard = _cards.last;
   }
 
   void simSelect() {
-    if(selectedRadio == 1) {
+    if (selectedRadio == 1) {
       loadSimCardOne();
       print(selectedRadio);
-    }
-    else if(selectedRadio == 2){
+    } else if (selectedRadio == 2) {
       loadSimCardTwo();
       print(selectedRadio);
     }
@@ -126,7 +134,6 @@ class _SmsState extends State<SmsWidget> {
           ),
           centerTitle: true,
         ),
-
         body: Column(
           children: <Widget>[
             Container(
@@ -138,13 +145,13 @@ class _SmsState extends State<SmsWidget> {
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black12, width: 2),
-                    borderRadius: const BorderRadius.all(const Radius.circular(15)),
-
+                    borderRadius:
+                        const BorderRadius.all(const Radius.circular(15)),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: Colors.black26, width: 2),
-                    borderRadius: const BorderRadius.all(const Radius.circular(15)),
-
+                    borderRadius:
+                        const BorderRadius.all(const Radius.circular(15)),
                   ),
                   hintText: 'Enter message...',
                 ),
@@ -183,7 +190,8 @@ class _SmsState extends State<SmsWidget> {
 
             SizedBox(height: 18),
 
-            Text('Recipients:',
+            Text(
+              'Recipients:',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -197,7 +205,8 @@ class _SmsState extends State<SmsWidget> {
               builder: (final context, final snapshot) {
                 if (snapshot.hasData) {
                   final String contacts = snapshot.data.replaceAll('\n', '');
-                  final List<String> _data = contacts.replaceAll(' ', '').split(',');
+                  final List<String> _data =
+                      contacts.replaceAll(' ', '').split(',');
                   return Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.all(8),
@@ -208,7 +217,8 @@ class _SmsState extends State<SmsWidget> {
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.all(Radius.circular(4)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(4)),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.grey.withOpacity(0.15),
@@ -225,7 +235,9 @@ class _SmsState extends State<SmsWidget> {
                                 children: [
                                   Text(
                                     '${_data[index]}',
-                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w600),
                                   ),
                                 ],
                               ),
@@ -241,11 +253,8 @@ class _SmsState extends State<SmsWidget> {
                 );
               },
             ),
-
           ],
         ),
-
-
         floatingActionButton: FloatingActionButton.extended(
           tooltip: 'Send message',
           icon: Icon(Icons.send),

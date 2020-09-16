@@ -14,6 +14,27 @@ class NumberPickerWidget extends StatefulWidget {
 }
 
 class _NumberPickerState extends State<NumberPickerWidget> {
+
+  void _pickFile() async {
+    File files = await FilePicker.getFile(
+      type: FileType.custom,
+      allowedExtensions: ['txt'],
+    );
+
+    if (files != null) {
+      Navigator.pushNamed(context, AppData.pageRoutSendSms,
+          arguments: {'file': files});
+    }
+  }
+
+  void _pickContact() async{
+    Iterable<Contact> contacts = await ContactsService.getContacts(withThumbnails: false);
+    if(contacts != null ) {
+      Navigator.pushNamed(context, AppData.pageRoutContactSelect,
+          arguments: {'contact': contacts});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -99,25 +120,5 @@ class _NumberPickerState extends State<NumberPickerWidget> {
         ),
       ),
     );
-  }
-
-  void _pickFile() async {
-    File files = await FilePicker.getFile(
-      type: FileType.custom,
-      allowedExtensions: ['txt'],
-    );
-
-    if (files != null) {
-      Navigator.pushNamed(context, AppData.pageRoutSendSms,
-          arguments: {'file': files});
-    }
-  }
-
-  void _pickContact() async{
-    Iterable<Contact> contacts = await ContactsService.getContacts(withThumbnails: false);
-    if(contacts != null ) {
-      Navigator.pushNamed(context, AppData.pageRoutContactSelect,
-        arguments: {'contact': contacts});
-    }
   }
 }

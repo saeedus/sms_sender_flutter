@@ -17,12 +17,20 @@ class _SmsDeliveredState extends State<SmsDelivered> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 0,
-          title: Text('Quick Message',
+          leading: IconButton(
+            color: Colors.black54,
+            tooltip: 'Previous page',
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          title: Text(
+            'Quick Message',
             style: TextStyle(
               fontWeight: FontWeight.normal,
-              fontStyle: FontStyle.italic,
-              fontSize: 18,
-              color: Colors.blue,
+              fontSize: 20,
+              color: Colors.black54,
             ),
           ),
           centerTitle: true,

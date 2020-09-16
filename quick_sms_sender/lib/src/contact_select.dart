@@ -24,8 +24,6 @@ class _SelectContactState extends State<SelectContact> {
   List<bool> _isChecked = List<bool>();
   List<String> _selectedContacts = List<String>();
 
-
-
   @override
   void initState() {
     super.initState();
@@ -37,8 +35,8 @@ class _SelectContactState extends State<SelectContact> {
   }
 
   void sendContacts() {
-    if(_selectedContacts[0] != '') {
-      Navigator.pushNamed(context, AppData.pageRoutSendSms);
+    if (_selectedContacts[0] != '') {
+      Navigator.pushNamed(context, AppData.pageRoutSendSms, arguments: {'selectedNums': _selectedContacts});
     }
   }
 
@@ -91,32 +89,26 @@ class _SelectContactState extends State<SelectContact> {
                 return CheckboxListTile(
                   value: _isChecked[index],
                   title: Text(snapshot.data.elementAt(index).displayName),
-
                   onChanged: (bool value) {
                     setState(() {
                       _isChecked[index] = value;
-                      if(value) {
-                        _selectedContacts.add(snapshot.data.elementAt(index).phones.elementAt(0).value);
+                      if (value) {
+                        _selectedContacts.add(snapshot.data
+                            .elementAt(index)
+                            .phones
+                            .elementAt(0)
+                            .value);
                         print(_selectedContacts);
-                      }
-                      else {
-                        _selectedContacts.remove(snapshot.data.elementAt(index).phones.elementAt(0).value);
+                      } else {
+                        _selectedContacts.remove(snapshot.data
+                            .elementAt(index)
+                            .phones
+                            .elementAt(0)
+                            .value);
                         print(_selectedContacts);
                       }
                     });
                   },
-
-                  // onChanged: (bool value) {
-                  //   setState(() {
-                  //     _isChecked[index] = value;
-                  //     _selectedContacts.add(snapshot.data
-                  //         .elementAt(index)
-                  //         .phones
-                  //         .elementAt(0)
-                  //         .value);
-                  //   });
-                  //   print(_selectedContacts);
-                  // },
                 );
               },
             );
