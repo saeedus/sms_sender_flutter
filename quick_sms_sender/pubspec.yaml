@@ -25,6 +25,7 @@ dependencies:
   rxdart: ^0.24.1
   file_picker: ^1.13.3
   contacts_service: ^0.4.6
+  shared_preferences: ^0.5.10
   flutter:
     sdk: flutter
 

@@ -45,15 +45,15 @@ class _NumberPickerState extends State<NumberPickerWidget> {
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          elevation: 0,
+          elevation: 2,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Quick Message',
+                'Group Message',
                 style: TextStyle(
                   fontWeight: FontWeight.normal,
-                  fontSize: 20,
+                  fontSize: 22,
                   color: Colors.black54,
                 ),
               ),
@@ -67,10 +67,10 @@ class _NumberPickerState extends State<NumberPickerWidget> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 ButtonTheme(
-                  minWidth: 160,
+                  minWidth: 170,
                   child: RaisedButton(
                     shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(12.0)),
+                        borderRadius: new BorderRadius.circular(18.0)),
                     color: Colors.blue,
                     textColor: Colors.white70,
                     onPressed: _pickFile,
@@ -88,20 +88,23 @@ class _NumberPickerState extends State<NumberPickerWidget> {
                   ),
                 ),
                 SizedBox(height: 12),
-                RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(12.0)),
-                  color: Colors.red,
-                  textColor: Colors.white70,
-                  padding: const EdgeInsets.all(0.0),
-                  onPressed: _pickContact,
-                  child: Container(
-                    padding: EdgeInsets.all(18),
-                    child: Text(
-                      'Choose contact',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                ButtonTheme(
+                  minWidth: 170,
+                  child: RaisedButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(18.0)),
+                    color: Colors.red,
+                    textColor: Colors.white70,
+                    padding: const EdgeInsets.all(0.0),
+                    onPressed: _pickContact,
+                    child: Container(
+                      padding: EdgeInsets.all(18),
+                      child: Text(
+                        'Choose contact',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -110,7 +113,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
             ),
             SizedBox(height: 84),
             Text(
-              'Previously sent:',
+              'Groups:',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
@@ -122,7 +125,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
               child: GridView.builder(
                 shrinkWrap: true,
                 padding: const EdgeInsets.all(20),
-                itemCount: 12,
+                itemCount: 5,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     mainAxisSpacing: 10,
@@ -132,7 +135,6 @@ class _NumberPickerState extends State<NumberPickerWidget> {
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(24)),
-                      // color: Colors.blue[100],
                       color: Colors.grey[200],
                     ),
                     child: Center(
@@ -158,7 +160,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
                             color: Colors.white70,
                             shape: RoundedRectangleBorder(
                                 borderRadius: new BorderRadius.circular(30.0)),
-                            child: Text('View'),
+                            child: Text('view'),
                             onPressed: _prevContacts,
                           ),
                         ],

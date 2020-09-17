@@ -6,6 +6,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'package:sms/sms.dart';
 
+
 class SmsWidget extends StatefulWidget {
   final Map data;
   SmsWidget(this.data);
@@ -22,7 +23,6 @@ class _SmsState extends State<SmsWidget> {
   final BehaviorSubject<String> _contactStringBehavior = BehaviorSubject();
   SimCard _simCard;
   int selectedRadio;
-  String contacts;
 
   @override
   void initState() {
@@ -38,17 +38,17 @@ class _SmsState extends State<SmsWidget> {
   }
 
   ///if file a .txt file is chosen it'll read from the file
-  ///else, it'll read from the selected contacts
+  ///else, it'll read from local contact
   void _readContactString() async {
     if (this.widget.data['file'] != null) {
       final File _file = this.widget.data['file'];
       String contacts = await _file.readAsString();
-      debugPrint(contacts);
       _contactStringBehavior.sink.add(contacts);
     } else {
       final List<String> _numbers = this.widget.data['selectedNums'];
       String contacts = _numbers.join(",");
       _contactStringBehavior.sink.add(contacts);
+
       print('NUMBERS ARE HERE');
       print(_numbers);
     }
@@ -57,6 +57,7 @@ class _SmsState extends State<SmsWidget> {
   _onError(_error) {
     debugPrint(_error.toString());
   }
+
 
   void sendSms() async {
     SmsSender _messageSender = new SmsSender();
@@ -115,7 +116,7 @@ class _SmsState extends State<SmsWidget> {
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          elevation: 0,
+          elevation: 2,
           leading: IconButton(
             color: Colors.black54,
             tooltip: 'Previous page',
@@ -125,140 +126,158 @@ class _SmsState extends State<SmsWidget> {
             },
           ),
           title: Text(
-            'Quick Message',
+            'Write Message',
             style: TextStyle(
               fontWeight: FontWeight.normal,
-              fontSize: 20,
-              color: Colors.black54,
+              fontSize: 19,
+              color: Colors.grey[800],
+              letterSpacing: 0.5,
             ),
           ),
-          centerTitle: true,
         ),
-        body: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(6),
-              child: TextField(
-                maxLines: 5,
-                autofocus: false,
-                controller: messageController,
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black12, width: 2),
-                    borderRadius:
-                        const BorderRadius.all(const Radius.circular(15)),
+        body: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            FocusScope.of(context).requestFocus(new FocusNode());
+          },
+          child: Column(
+            children: <Widget>[
+              SizedBox(height: 12),
+              Container(
+                padding: EdgeInsets.all(6),
+                child: TextField(
+                  maxLines: 5,
+                  autofocus: false,
+                  controller: messageController,
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey[300], width: 2),
+                      borderRadius:
+                          const BorderRadius.all(const Radius.circular(18)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey[300], width: 2),
+                      borderRadius:
+                          const BorderRadius.all(const Radius.circular(18)),
+                    ),
+                    hintText: 'Enter message...',
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.black26, width: 2),
-                    borderRadius:
-                        const BorderRadius.all(const Radius.circular(15)),
-                  ),
-                  hintText: 'Enter message...',
                 ),
               ),
-            ),
 
-            SizedBox(height: 18),
+              SizedBox(height: 18),
 
-            //radiobutton
-            ButtonBar(
-              alignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('SIM 1'),
-                Radio(
-                  value: 1,
-                  groupValue: selectedRadio,
-                  activeColor: Colors.green,
-                  onChanged: (val) {
-                    setSelectedRadio(val);
-                    simSelect();
-                  },
-                ),
-                Radio(
-                  value: 2,
-                  groupValue: selectedRadio,
-                  activeColor: Colors.blue,
-                  onChanged: (val) {
-                    print("Radio $val");
-                    setSelectedRadio(val);
-                    simSelect();
-                  },
-                ),
-                Text('SIM 2'),
-              ],
-            ),
-
-            SizedBox(height: 18),
-
-            Text(
-              'Recipients:',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+              //radiobutton
+              ButtonBar(
+                alignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('SIM 1',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Radio(
+                    value: 1,
+                    groupValue: selectedRadio,
+                    activeColor: Colors.green,
+                    onChanged: (val) {
+                      setSelectedRadio(val);
+                      simSelect();
+                    },
+                  ),
+                  Radio(
+                    value: 2,
+                    groupValue: selectedRadio,
+                    activeColor: Colors.blue,
+                    onChanged: (val) {
+                      print("Radio $val");
+                      setSelectedRadio(val);
+                      simSelect();
+                    },
+                  ),
+                  Text('SIM 2',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
               ),
-            ),
 
-            SizedBox(height: 5),
+              SizedBox(height: 18),
 
-            StreamBuilder<String>(
-              stream: _contactStringBehavior.stream,
-              builder: (final context, final snapshot) {
-                if (snapshot.hasData) {
-                  final String contacts = snapshot.data.replaceAll('\n', '');
-                  final List<String> _data =
-                      contacts.replaceAll(' ', '').split(',');
-                  return Expanded(
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(8),
-                      itemCount: _data.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(top: 12),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(4)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.15),
-                                  spreadRadius: 1.5,
-                                  blurRadius: 2,
-                                ),
-                              ],
-                            ),
-                            height: 35,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 12),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    '${_data[index]}',
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600),
+              Text(
+                'Recipients:',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[600],
+                ),
+              ),
+
+              SizedBox(height: 5),
+
+              StreamBuilder<String>(
+                stream: _contactStringBehavior.stream,
+                builder: (final context, final snapshot) {
+                  if (snapshot.hasData) {
+                    final String contacts = snapshot.data.replaceAll('\n', '');
+                    final List<String> _data =
+                        contacts.replaceAll(' ', '').split(',');
+                    return Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.all(8),
+                        itemCount: _data.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 12),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(4)),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.15),
+                                    spreadRadius: 1.5,
+                                    blurRadius: 2,
                                   ),
                                 ],
                               ),
+                              height: 35,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 12),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      '${_data[index]}',
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
+                    );
+                  }
+                  return Center(
+                    child: Column(
+                      children: <Widget>[
+                        SizedBox(height: 12),
+                        CircularProgressIndicator(
+                        ),
+                      ],
                     ),
                   );
-                }
-                return Center(
-                  child: Column(
-                    children: <Widget>[
-                      SizedBox(height: 12),
-                      CircularProgressIndicator(),
-                    ],
-                  ),
-                );
-              },
-            ),
-          ],
+                },
+              ),
+            ],
+          ),
         ),
         floatingActionButton: FloatingActionButton.extended(
           tooltip: 'Send message',

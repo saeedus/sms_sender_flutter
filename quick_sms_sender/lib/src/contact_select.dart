@@ -51,7 +51,7 @@ class _SelectContactState extends State<SelectContact> {
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          elevation: 0,
+          elevation: 2,
           leading: IconButton(
             color: Colors.black54,
             tooltip: 'Previous page',
@@ -61,14 +61,14 @@ class _SelectContactState extends State<SelectContact> {
             },
           ),
           title: Text(
-            'Quick Message',
+            'Select Contact',
             style: TextStyle(
               fontWeight: FontWeight.normal,
-              fontSize: 20,
-              color: Colors.black54,
+              fontSize: 19,
+              color: Colors.grey[800],
+              letterSpacing: 0.5,
             ),
           ),
-          centerTitle: true,
         ),
         body: StreamBuilder<Iterable<Contact>>(
           stream: _readContactsStream.stream,
@@ -78,7 +78,35 @@ class _SelectContactState extends State<SelectContact> {
               itemBuilder: (BuildContext context, int index) {
                 return CheckboxListTile(
                   value: _isChecked[index],
-                  title: Text(snapshot.data.elementAt(index).displayName),
+                  title: Container(
+                    height: 70,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      borderRadius: BorderRadius.all(Radius.circular(18)),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey,
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8, top: 8),
+                          child: Text(snapshot.data.elementAt(index).displayName,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.normal,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 36),
+                      ],
+                    ),
+                  ),
+                  // title: Text(snapshot.data.elementAt(index).displayName),
                   onChanged: (bool value) {
                     setState(() {
                       _isChecked[index] = value;

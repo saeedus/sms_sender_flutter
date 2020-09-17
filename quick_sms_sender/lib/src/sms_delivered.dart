@@ -16,7 +16,7 @@ class _SmsDeliveredState extends State<SmsDelivered> {
       home: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
-          elevation: 0,
+          elevation: 2,
           leading: IconButton(
             color: Colors.black54,
             tooltip: 'Previous page',
@@ -26,14 +26,14 @@ class _SmsDeliveredState extends State<SmsDelivered> {
             },
           ),
           title: Text(
-            'Quick Message',
+            'Delivery Status',
             style: TextStyle(
               fontWeight: FontWeight.normal,
-              fontSize: 20,
-              color: Colors.black54,
+              fontSize: 19,
+              color: Colors.grey[800],
+              letterSpacing: 0.5,
             ),
           ),
-          centerTitle: true,
         ),
         body: Center(
           child: Text('Message sent successfully!',
