@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:quick_sms_sender/src/app_data.dart';
 import 'package:contacts_service/contacts_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class NumberPickerWidget extends StatefulWidget {
   @override
@@ -14,6 +15,7 @@ class NumberPickerWidget extends StatefulWidget {
 }
 
 class _NumberPickerState extends State<NumberPickerWidget> {
+
   void _pickFile() async {
     File files = await FilePicker.getFile(
       type: FileType.custom,
@@ -27,6 +29,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
   }
 
   void _pickContact() async {
+    await Permission.contacts.request();
     Iterable<Contact> contacts =
         await ContactsService.getContacts(withThumbnails: false);
     if (contacts != null) {
