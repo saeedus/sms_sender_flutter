@@ -3,7 +3,6 @@ import 'package:quick_sms_sender/src/app_data.dart';
 import 'package:quick_sms_sender/src/contact_select.dart';
 import 'package:quick_sms_sender/src/launch_screen.dart';
 import 'package:quick_sms_sender/src/number_picker.dart';
-import 'package:quick_sms_sender/src/sms_delivered.dart';
 import 'package:quick_sms_sender/src/sms_widget.dart';
 
 class App extends StatefulWidget {
@@ -28,9 +27,6 @@ class _AppState extends State<App> {
     }
     else if (settings.name == AppData.pageRoutSendSms) {
       _page = SmsWidget(settings.arguments);
-    }
-    else if (settings.name == AppData.pageRoutSent) {
-      _page = SmsDelivered();
     }
     else if(settings.name == AppData.pageRoutContactSelect) {
       _page = SelectContact(settings.arguments);

@@ -128,7 +128,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
               child: GridView.builder(
                 shrinkWrap: true,
                 padding: const EdgeInsets.all(20),
-                itemCount: 5,
+                itemCount: 6,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     mainAxisSpacing: 10,
@@ -140,35 +140,67 @@ class _NumberPickerState extends State<NumberPickerWidget> {
                       borderRadius: BorderRadius.all(Radius.circular(24)),
                       color: Colors.grey[200],
                     ),
-                    child: Center(
-                      child: Column(
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
-                          Text(
-                            'Group 1',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black38,
-                            ),
+                          Container(
+                            child: Text(
+                                'Group',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black38,
+                                ),
+                              ),
+                            padding: EdgeInsets.only(left: 8),
                           ),
-                          SizedBox(height: 10),
-                          Text(
-                            '+8801842220598\n+8801531723118\n+8801521534263\n              ...',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black26,
-                            ),
-                          ),
-                          FlatButton(
-                            color: Colors.white70,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0)),
-                            child: Text('view'),
-                            onPressed: _prevContacts,
+                          Container(
+                            child: Text('X'),
                           ),
                         ],
                       ),
-                    ),
+
+
+                      // child: Row(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: <Widget>[
+                      //     SizedBox(width: 8),
+                      //     Text(
+                      //       'Group 1',
+                      //       style: TextStyle(
+                      //         fontSize: 18,
+                      //         fontWeight: FontWeight.bold,
+                      //         color: Colors.black38,
+                      //       ),
+                      //     ),
+                      //     SizedBox(width: 28),
+                      //     PopupMenuButton(
+                      //       itemBuilder: (context) => [
+                      //         PopupMenuItem(
+                      //           child: Text('Rename'),
+                      //         ),
+                      //         PopupMenuItem(
+                      //           child: Text('Delete'),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //     // SizedBox(height: 10),
+                      //     // Text(
+                      //     //   '+8801842220598\n+8801531723118\n+8801521534263\n              ...',
+                      //     //   style: TextStyle(
+                      //     //     fontSize: 12,
+                      //     //     color: Colors.black26,
+                      //     //   ),
+                      //     // ),
+                      //     // FlatButton(
+                      //     //   color: Colors.white70,
+                      //     //   shape: RoundedRectangleBorder(
+                      //     //       borderRadius: new BorderRadius.circular(30.0)),
+                      //     //   child: Text('view'),
+                      //     //   onPressed: _prevContacts,
+                      //     // ),
+                      //   ],
+                      // ),
                   );
                 },
               ),

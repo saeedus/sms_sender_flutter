@@ -1,11 +1,8 @@
-import 'dart:async';
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
-import 'package:quick_sms_sender/src/app_data.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'package:sms/sms.dart';
-
 
 class SmsWidget extends StatefulWidget {
   final Map data;
@@ -48,16 +45,12 @@ class _SmsState extends State<SmsWidget> {
       final List<String> _numbers = this.widget.data['selectedNums'];
       String contacts = _numbers.join(",");
       _contactStringBehavior.sink.add(contacts);
-
-      print('NUMBERS ARE HERE');
-      print(_numbers);
     }
   }
 
   _onError(_error) {
     debugPrint(_error.toString());
   }
-
 
   void sendSms() async {
     SmsSender _messageSender = new SmsSender();
@@ -66,22 +59,49 @@ class _SmsState extends State<SmsWidget> {
     address.replaceAll(' ', '');
     final List<String> _contactList = address.split(',');
     final String _messageData = messageController.text;
-    List<StreamSubscription> _list = List();
     for (int i = 0; i < _contactList.length; i++) {
       final _contactNumber = _contactList[i];
       if (_contactNumber != null && _contactNumber.isNotEmpty) {
         final _message = SmsMessage(_contactNumber, _messageData);
-        final StreamSubscription _t = _message.onStateChanged.listen((state) {
-          if (state == SmsMessageState.Sent && i == _contactList.length - 1) {
-            Navigator.pushNamed(context, AppData.pageRoutSent);
-          }
-        });
-        _list.add(_t);
         await _messageSender
             .sendSms(_message, simCard: _simCard)
             .catchError(_onError);
       }
     }
+  }
+
+  void deliveryStatusDialog() {
+    setState(() {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return Dialog(
+            child: Container(
+              color: Color.fromRGBO(0, 156, 246, 1),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Image(
+                    image: AssetImage('assets/smsSending.gif'),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    child: Text('SENDING',
+                      style: TextStyle(
+                        fontSize: 16,
+                        letterSpacing: 1.5,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+      },
+      );
+    });
   }
 
   void loadSimCardOne() async {
@@ -171,7 +191,8 @@ class _SmsState extends State<SmsWidget> {
               ButtonBar(
                 alignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text('SIM 1',
+                  Text(
+                    'SIM 1',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
@@ -195,7 +216,8 @@ class _SmsState extends State<SmsWidget> {
                       simSelect();
                     },
                   ),
-                  Text('SIM 2',
+                  Text(
+                    'SIM 2',
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                     ),
@@ -252,8 +274,8 @@ class _SmsState extends State<SmsWidget> {
                                     Text(
                                       '${_data[index]}',
                                       style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w500,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ],
@@ -269,8 +291,7 @@ class _SmsState extends State<SmsWidget> {
                     child: Column(
                       children: <Widget>[
                         SizedBox(height: 12),
-                        CircularProgressIndicator(
-                        ),
+                        CircularProgressIndicator(),
                       ],
                     ),
                   );
@@ -285,6 +306,7 @@ class _SmsState extends State<SmsWidget> {
           label: Text('SEND'),
           onPressed: () {
             sendSms();
+            deliveryStatusDialog();
           },
         ),
       ),
