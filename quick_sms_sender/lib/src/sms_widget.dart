@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
@@ -70,40 +71,6 @@ class _SmsState extends State<SmsWidget> {
     }
   }
 
-  void deliveryStatusDialog() {
-    setState(() {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            child: Container(
-              color: Color.fromRGBO(0, 156, 246, 1),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Image(
-                    image: AssetImage('assets/smsSending.gif'),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(12),
-                    child: Text('SENDING',
-                      style: TextStyle(
-                        fontSize: 16,
-                        letterSpacing: 1.5,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-      },
-      );
-    });
-  }
-
   void loadSimCardOne() async {
     List<SimCard> _cards = await _simCardProvider.getSimCards();
     _simCard = _cards.first;
@@ -127,6 +94,82 @@ class _SmsState extends State<SmsWidget> {
   setSelectedRadio(int simVal) {
     setState(() {
       selectedRadio = simVal;
+    });
+  }
+
+  void deliveryStatusDialog() {
+    setState(() {
+      showDialog(
+        barrierDismissible: false,
+        barrierColor: Colors.black.withOpacity(0.05),
+        context: context,
+        builder: (BuildContext context) {
+          return BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 5,
+              sigmaY: 5,
+            ),
+            child: Dialog(
+              insetAnimationDuration: Duration(milliseconds: 300),
+              backgroundColor: Colors.transparent,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(18),
+                child: Container(
+                  color: Color.fromRGBO(0, 156, 246, 1),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Container(
+                        padding: EdgeInsets.only(top: 18),
+                        child: Text('SENDING',
+                          style: TextStyle(
+                            fontSize: 20,
+                            letterSpacing: 1.5,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      Image.asset('assets/smsSending.gif'),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <FlatButton>[
+                          FlatButton(
+                            padding: EdgeInsets.fromLTRB(36, 6, 36, 6),
+                            child: Text('SAVE',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onPressed: () {
+
+                            },
+                          ),
+                          FlatButton(
+                            padding: EdgeInsets.fromLTRB(36, 6, 36, 6),
+                            child: Text('CLOSE',
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
     });
   }
 

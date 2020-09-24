@@ -15,7 +15,6 @@ class NumberPickerWidget extends StatefulWidget {
 }
 
 class _NumberPickerState extends State<NumberPickerWidget> {
-
   void _pickFile() async {
     File files = await FilePicker.getFile(
       type: FileType.custom,
@@ -38,10 +37,6 @@ class _NumberPickerState extends State<NumberPickerWidget> {
     }
   }
 
-  void _prevContacts() {
-    Navigator.pushNamed(context, AppData.pageRoutSendSms);
-}
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -49,163 +44,89 @@ class _NumberPickerState extends State<NumberPickerWidget> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 2,
-          title: Row(
+          centerTitle: true,
+          title: Text(
+            'Group Message',
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 22,
+              color: Colors.black54,
+            ),
+          ),
+        ),
+        body: Center(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Group Message',
-                style: TextStyle(
-                  fontWeight: FontWeight.normal,
-                  fontSize: 22,
-                  color: Colors.black54,
+            children: <Widget>[
+              ButtonTheme(
+                minWidth: 170,
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(30.0)),
+                  color: Colors.blue,
+                  textColor: Colors.white70,
+                  onPressed: _pickFile,
+                  padding: const EdgeInsets.all(0.0),
+                  child: Container(
+                    padding: EdgeInsets.all(18),
+                    child: Text(
+                      'File',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 12),
+              ButtonTheme(
+                minWidth: 170,
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(30.0)),
+                  color: Colors.blue,
+                  textColor: Colors.white70,
+                  padding: const EdgeInsets.all(0.0),
+                  onPressed: () {
+
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(18),
+                    child: Text(
+                      'Group',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 12),
+              ButtonTheme(
+                minWidth: 170,
+                child: RaisedButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(30.0)),
+                  color: Colors.blue,
+                  textColor: Colors.white70,
+                  onPressed: _pickContact,
+                  padding: const EdgeInsets.all(0.0),
+                  child: Container(
+                    padding: EdgeInsets.all(18),
+                    child: Text(
+                      'Contact',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
           ),
-        ),
-        body: Column(
-          children: <Widget>[
-            SizedBox(height: 72),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                ButtonTheme(
-                  minWidth: 170,
-                  child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(18.0)),
-                    color: Colors.blue,
-                    textColor: Colors.white70,
-                    onPressed: _pickFile,
-                    padding: const EdgeInsets.all(0.0),
-                    child: Container(
-                      padding: EdgeInsets.all(18),
-                      child: Text(
-                        'Choose file',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 12),
-                ButtonTheme(
-                  minWidth: 170,
-                  child: RaisedButton(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(18.0)),
-                    color: Colors.red,
-                    textColor: Colors.white70,
-                    padding: const EdgeInsets.all(0.0),
-                    onPressed: _pickContact,
-                    child: Container(
-                      padding: EdgeInsets.all(18),
-                      child: Text(
-                        'Choose contact',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 84),
-            Text(
-              'Groups:',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[600],
-              ),
-            ),
-            SizedBox(height: 12),
-            Expanded(
-              child: GridView.builder(
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(20),
-                itemCount: 6,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10),
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(24)),
-                      color: Colors.grey[200],
-                    ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            child: Text(
-                                'Group',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black38,
-                                ),
-                              ),
-                            padding: EdgeInsets.only(left: 8),
-                          ),
-                          Container(
-                            child: Text('X'),
-                          ),
-                        ],
-                      ),
-
-
-                      // child: Row(
-                      //   crossAxisAlignment: CrossAxisAlignment.start,
-                      //   children: <Widget>[
-                      //     SizedBox(width: 8),
-                      //     Text(
-                      //       'Group 1',
-                      //       style: TextStyle(
-                      //         fontSize: 18,
-                      //         fontWeight: FontWeight.bold,
-                      //         color: Colors.black38,
-                      //       ),
-                      //     ),
-                      //     SizedBox(width: 28),
-                      //     PopupMenuButton(
-                      //       itemBuilder: (context) => [
-                      //         PopupMenuItem(
-                      //           child: Text('Rename'),
-                      //         ),
-                      //         PopupMenuItem(
-                      //           child: Text('Delete'),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //     // SizedBox(height: 10),
-                      //     // Text(
-                      //     //   '+8801842220598\n+8801531723118\n+8801521534263\n              ...',
-                      //     //   style: TextStyle(
-                      //     //     fontSize: 12,
-                      //     //     color: Colors.black26,
-                      //     //   ),
-                      //     // ),
-                      //     // FlatButton(
-                      //     //   color: Colors.white70,
-                      //     //   shape: RoundedRectangleBorder(
-                      //     //       borderRadius: new BorderRadius.circular(30.0)),
-                      //     //   child: Text('view'),
-                      //     //   onPressed: _prevContacts,
-                      //     // ),
-                      //   ],
-                      // ),
-                  );
-                },
-              ),
-            )
-          ],
         ),
       ),
     );
