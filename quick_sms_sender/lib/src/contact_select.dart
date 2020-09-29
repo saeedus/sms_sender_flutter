@@ -73,6 +73,9 @@ class _SelectContactState extends State<SelectContact> {
         body: StreamBuilder<Iterable<Contact>>(
           stream: _readContactsStream.stream,
           builder: (final context, final snapshot) {
+            if(!snapshot.hasData){
+              return Center(child: CircularProgressIndicator(),);
+            }
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
@@ -106,7 +109,6 @@ class _SelectContactState extends State<SelectContact> {
                       ],
                     ),
                   ),
-                  // title: Text(snapshot.data.elementAt(index).displayName),
                   onChanged: (bool value) {
                     setState(() {
                       _isChecked[index] = value;

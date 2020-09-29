@@ -15,6 +15,7 @@ class NumberPickerWidget extends StatefulWidget {
 }
 
 class _NumberPickerState extends State<NumberPickerWidget> {
+
   void _pickFile() async {
     File files = await FilePicker.getFile(
       type: FileType.custom,
@@ -41,6 +42,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        // backgroundColor: Colors.black,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 2,
@@ -59,21 +61,24 @@ class _NumberPickerState extends State<NumberPickerWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               ButtonTheme(
-                minWidth: 170,
-                child: RaisedButton(
+                splashColor: Colors.blueAccent[100],
+                minWidth: 156,
+                child: FlatButton(
                   shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(30.0)),
-                  color: Colors.blue,
-                  textColor: Colors.white70,
+                      borderRadius: new BorderRadius.circular(24.0),
+                    side: BorderSide(color: Colors.blue),
+                  ),
+                  color: Colors.transparent,
                   onPressed: _pickFile,
-                  padding: const EdgeInsets.all(0.0),
                   child: Container(
-                    padding: EdgeInsets.all(18),
+                    padding: EdgeInsets.all(14),
                     child: Text(
-                      'File',
+                      'FILE',
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.blue,
                       ),
                     ),
                   ),
@@ -81,45 +86,51 @@ class _NumberPickerState extends State<NumberPickerWidget> {
               ),
               SizedBox(height: 12),
               ButtonTheme(
-                minWidth: 170,
-                child: RaisedButton(
+                minWidth: 156,
+                splashColor: Colors.blueAccent[100],
+                child: FlatButton(
                   shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(30.0)),
-                  color: Colors.blue,
-                  textColor: Colors.white70,
-                  padding: const EdgeInsets.all(0.0),
+                      borderRadius: new BorderRadius.circular(24.0),
+                      side: BorderSide(color: Colors.blue),
+                  ),
+                  color: Colors.transparent,
+                  onPressed: _pickContact,
+                  child: Container(
+                    padding: EdgeInsets.all(14),
+                    child: Text(
+                      'CONTACT',
+                      style: TextStyle(
+                        letterSpacing: 1,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 12),
+              ButtonTheme(
+                minWidth: 156,
+                splashColor: Colors.blueAccent[100],
+                child: FlatButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(24.0),
+                      side: BorderSide(color: Colors.blue),
+                  ),
+                  color: Colors.transparent,
                   onPressed: () {
-
+                    Navigator.pushNamed(context, AppData.pageRouteArchiveContact);
                   },
                   child: Container(
-                    padding: EdgeInsets.all(18),
+                    padding: EdgeInsets.all(14),
                     child: Text(
-                      'Group',
+                      'ARCHIVED',
                       style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 12),
-              ButtonTheme(
-                minWidth: 170,
-                child: RaisedButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(30.0)),
-                  color: Colors.blue,
-                  textColor: Colors.white70,
-                  onPressed: _pickContact,
-                  padding: const EdgeInsets.all(0.0),
-                  child: Container(
-                    padding: EdgeInsets.all(18),
-                    child: Text(
-                      'Contact',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.blue,
                       ),
                     ),
                   ),

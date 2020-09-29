@@ -13,7 +13,7 @@ class _LaunchScreenState extends State<LaunchScreenWidget> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(Duration(milliseconds: 500), () {
       Navigator.pushReplacementNamed(context, AppData.pageRoutePicker);
     });
   }

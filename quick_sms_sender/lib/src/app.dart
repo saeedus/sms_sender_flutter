@@ -5,6 +5,8 @@ import 'package:quick_sms_sender/src/launch_screen.dart';
 import 'package:quick_sms_sender/src/number_picker.dart';
 import 'package:quick_sms_sender/src/sms_widget.dart';
 
+import 'archived.dart';
+
 class App extends StatefulWidget {
   createState() {
     return _AppState();
@@ -30,6 +32,9 @@ class _AppState extends State<App> {
     }
     else if(settings.name == AppData.pageRoutContactSelect) {
       _page = SelectContact(settings.arguments);
+    }
+    else if(settings.name == AppData.pageRouteArchiveContact) {
+      _page = Archived(settings.arguments);
     }
 
 

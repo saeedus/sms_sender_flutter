@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:quick_sms_sender/src/app_data.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter/material.dart';
 import 'package:sms/sms.dart';
+import 'archived.dart';
 
 class SmsWidget extends StatefulWidget {
   final Map data;
@@ -91,10 +93,18 @@ class _SmsState extends State<SmsWidget> {
     }
   }
 
-  setSelectedRadio(int simVal) {
+  void setSelectedRadio(int simVal) {
     setState(() {
       selectedRadio = simVal;
     });
+  }
+
+  void archiveContact() async {
+    ArchivedState().incrementArchiveNo();
+    Navigator.pushNamed(context, AppData.pageRouteArchiveContact,
+        arguments: {'archivedContacts': _contactStringBehavior.value}
+    );
+    print('contact sent: ' + _contactStringBehavior.value);
   }
 
   void deliveryStatusDialog() {
@@ -121,7 +131,8 @@ class _SmsState extends State<SmsWidget> {
                     children: <Widget>[
                       Container(
                         padding: EdgeInsets.only(top: 18),
-                        child: Text('SENDING',
+                        child: Text(
+                          'SENDING',
                           style: TextStyle(
                             fontSize: 20,
                             letterSpacing: 1.5,
@@ -133,32 +144,51 @@ class _SmsState extends State<SmsWidget> {
                       Image.asset('assets/smsSending.gif'),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: <FlatButton>[
-                          FlatButton(
-                            padding: EdgeInsets.fromLTRB(36, 6, 36, 6),
-                            child: Text('SAVE',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                        children: <Widget>[
+                          ButtonTheme(
+                            minWidth: 135,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            child: FlatButton(
+                              padding: EdgeInsets.fromLTRB(36, 0, 36, 0),
+                              child: Text(
+                                'ARCHIVE',
+                                style: TextStyle(
+                                  color: Colors.greenAccent[100],
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
+                              onPressed: () {
+                                archiveContact();
+                              },
                             ),
-                            onPressed: () {
-
-                            },
                           ),
-                          FlatButton(
-                            padding: EdgeInsets.fromLTRB(36, 6, 36, 6),
-                            child: Text('CLOSE',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+                          Text(
+                            '|',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 18,
                             ),
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
+                          ),
+                          ButtonTheme(
+                            minWidth: 135,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            child: FlatButton(
+                              padding: EdgeInsets.fromLTRB(36, 0, 36, 0),
+                              child: Text(
+                                'CLOSE',
+                                style: TextStyle(
+                                  color: Colors.greenAccent[100],
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                            ),
                           ),
                         ],
                       ),
@@ -182,7 +212,6 @@ class _SmsState extends State<SmsWidget> {
           elevation: 2,
           leading: IconButton(
             color: Colors.black54,
-            tooltip: 'Previous page',
             icon: Icon(Icons.arrow_back),
             onPressed: () {
               Navigator.of(context).pop();
@@ -254,7 +283,6 @@ class _SmsState extends State<SmsWidget> {
                     groupValue: selectedRadio,
                     activeColor: Colors.blue,
                     onChanged: (val) {
-                      print("Radio $val");
                       setSelectedRadio(val);
                       simSelect();
                     },
@@ -349,7 +377,9 @@ class _SmsState extends State<SmsWidget> {
           label: Text('SEND'),
           onPressed: () {
             sendSms();
-            deliveryStatusDialog();
+            if (messageController.text != '') {
+              deliveryStatusDialog();
+            }
           },
         ),
       ),
