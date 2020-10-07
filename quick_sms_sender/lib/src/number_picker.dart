@@ -42,7 +42,6 @@ class _NumberPickerState extends State<NumberPickerWidget> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        // backgroundColor: Colors.black,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 2,

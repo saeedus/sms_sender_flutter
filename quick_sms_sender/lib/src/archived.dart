@@ -118,6 +118,7 @@ class ArchivedState extends State<Archived> {
                               builder: (final context, final snapshot2) {
                                 if(snapshot2.hasData) {
                                   return FlatButton(
+                                    color: Colors.blueAccent[100],
                                     child: Text('view'),
                                     onPressed: () async {
                                       final prefs = await SharedPreferences.getInstance();
@@ -148,9 +149,6 @@ class ArchivedState extends State<Archived> {
               prefs.remove((i++).toString());
               print('removed $i');
             }
-            setState(() {
-              prefs.setInt('archiveNo', 0);
-            });
           },
         ),
       ),

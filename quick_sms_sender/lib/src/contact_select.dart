@@ -5,9 +5,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:quick_sms_sender/src/app_data.dart';
+import 'package:quick_sms_sender/src/search_delegate.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:contacts_service/contacts_service.dart';
-import 'package:sms/sms.dart';
 
 class SelectContact extends StatefulWidget {
   final Map contacts;
@@ -49,9 +49,19 @@ class _SelectContactState extends State<SelectContact> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        drawer: Drawer(),
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 2,
+          actions: <Widget>[
+            IconButton(
+              onPressed: () {
+                showSearch(context: context, delegate: Search());
+              },
+              icon: Icon(Icons.search),
+              color: Colors.black54,
+            ),
+          ],
           leading: IconButton(
             color: Colors.black54,
             tooltip: 'Previous page',
