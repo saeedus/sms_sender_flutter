@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
-import 'contact_select.dart';
 import 'package:contacts_service/contacts_service.dart';
 
 class Search extends SearchDelegate {
   final Map contactList;
   Search(this.contactList);
+  List<String> contactListToSearch = List<String>();
 
-  final BehaviorSubject<Iterable<Contact>> readContactsStreamSearch =
-  BehaviorSubject();
-
-  void dispose() {
-    readContactsStreamSearch.close();
+  void contactToList() {
+    final Iterable<Contact> _contacts = this.contactList['contact'];
+    _contacts.forEach((element) {
+      contactListToSearch.add(element.displayName);
+    });
+    print(_contacts.length);
   }
 
   List<Widget> buildActions(BuildContext context) {
@@ -42,77 +42,20 @@ class Search extends SearchDelegate {
   }
 
   Widget buildSuggestions(BuildContext context) {
-    List<bool> isChecked = List<bool>();
-    List<String> selectedContacts = List<String>();
+    contactToList();
+    List<String> suggestionList = [];
 
-    final Iterable<Contact> _contacts = this.contactList['contact'];
-    readContactsStreamSearch.sink.add(_contacts);
-    for (int i = 0; i < _contacts.length; i++) {
-      isChecked.add(false);
-    }
+    query.isEmpty
+      ? suggestionList = []
+      : suggestionList.addAll(contactListToSearch.where((element) => element.startsWith(query)));
 
-    return StreamBuilder<Iterable<Contact>>(
-      stream: readContactsStreamSearch.stream,
-      builder: (final context, final snapshot) {
-        if(!snapshot.hasData){
-          return Center(child: CircularProgressIndicator(),);
-        }
-        return ListView.builder(
-          itemCount: snapshot.data.length,
-          itemBuilder: (BuildContext context, int index) {
-            return CheckboxListTile(
-              value: isChecked[index],
-              title: Container(
-                height: 70,
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.all(Radius.circular(18)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey,
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8, top: 8),
-                      child: Text(snapshot.data.elementAt(index).displayName,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.grey[700],
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 36),
-                  ],
-                ),
-              ),
-              onChanged: (bool value) {
-                  isChecked[index] = value;
-                  if (value) {
-                    selectedContacts.add(snapshot.data
-                        .elementAt(index)
-                        .phones
-                        .elementAt(0)
-                        .value);
-                    print(selectedContacts);
-                  } else {
-                    selectedContacts.remove(snapshot.data
-                        .elementAt(index)
-                        .phones
-                        .elementAt(0)
-                        .value);
-                    print(selectedContacts);
-                  }
-              },
-            );
-          },
+    return ListView.builder(
+      itemCount: suggestionList.length,
+      itemBuilder: (context, index) {
+        return ListTile(
+          title: Text(suggestionList.elementAt(index) + ' (' + suggestionList.length.toString() + ')' + index.toString()),
         );
       },
     );
   }
-
 }

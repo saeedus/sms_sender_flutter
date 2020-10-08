@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 ///-receive contact information using MaterialPageRoute argument
 ///-add radio buttons beside every contact
 ///-selected contacts will be send to sms_widget
@@ -89,83 +90,150 @@ class SelectContactState extends State<SelectContact> {
                 child: CircularProgressIndicator(),
               );
             }
-            return ListView.builder(
-              itemCount: snapshot.data.length,
-              itemBuilder: (BuildContext context, int index) {
-                return CheckboxListTile(
-                  value: isChecked[index],
-                  title: Container(
-                    height: 70,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[100],
-                      borderRadius: BorderRadius.all(Radius.circular(18)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey,
+            return Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: <Widget>[
+                      FlatButton(
+                        color: Colors.greenAccent[100],
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                        child: Text('Select All',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8, top: 8),
-                          child: Column(
-                            children: <Widget>[
-                              Text(
-                                snapshot.data.elementAt(index).displayName,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.grey[700],
-                                ),
-                              ),
-                              Text(snapshot.data
-                                  .elementAt(index)
+                        onPressed: () {
+                          setState(() {
+                            for (int i = 0; i < snapshot.data.length; i++) {
+                              selectedContacts.add(snapshot.data
+                                  .elementAt(i)
                                   .phones
                                   .elementAt(0)
-                                  .value,
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.grey[600],
-                                ),
+                                  .value);
+                              isChecked[i] = true;
+                            }
+                            print(selectedContacts);
+                          });
+                        },
+                      ),
+
+                      SizedBox(width: 6),
+
+                      FlatButton(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                        color: Colors.greenAccent[100],
+                        child: Text('Deselect All',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            selectedContacts.clear();
+                            for (int i = 0; i < snapshot.data.length; i++) {
+                              isChecked[i] = false;
+                            }
+                            print(selectedContacts);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return CheckboxListTile(
+                        value: isChecked[index],
+                        title: Container(
+                          height: 95,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[100],
+                            borderRadius: BorderRadius.all(Radius.circular(18)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey,
                               ),
                             ],
                           ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8, top: 8),
+                                child: Column(
+                                  children: <Widget>[
+                                    Text(
+                                      snapshot.data
+                                          .elementAt(index)
+                                          .displayName,
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.normal,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    SizedBox(height: 8),
+                                    Text(
+                                      snapshot.data
+                                          .elementAt(index)
+                                          .phones
+                                          .elementAt(0)
+                                          .value,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 36),
+                            ],
+                          ),
                         ),
-                        SizedBox(height: 36),
-                      ],
-                    ),
+                        onChanged: (bool value) {
+                          setState(() {
+                            isChecked[index] = value;
+                            if (value) {
+                              selectedContacts.add(snapshot.data
+                                  .elementAt(index)
+                                  .phones
+                                  .elementAt(0)
+                                  .value);
+                              print(selectedContacts);
+                            } else {
+                              selectedContacts.remove(snapshot.data
+                                  .elementAt(index)
+                                  .phones
+                                  .elementAt(0)
+                                  .value);
+                              print(selectedContacts);
+                            }
+                          });
+                        },
+                      );
+                    },
                   ),
-                  onChanged: (bool value) {
-                    setState(() {
-                      isChecked[index] = value;
-                      if (value) {
-                        selectedContacts.add(snapshot.data
-                            .elementAt(index)
-                            .phones
-                            .elementAt(0)
-                            .value);
-                        print(selectedContacts);
-                      } else {
-                        selectedContacts.remove(snapshot.data
-                            .elementAt(index)
-                            .phones
-                            .elementAt(0)
-                            .value);
-                        print(selectedContacts);
-                      }
-                    });
-                  },
-                );
-              },
+                ),
+              ],
             );
           },
         ),
         floatingActionButton: FloatingActionButton.extended(
           icon: Icon(Icons.done),
           label: Text('DONE'),
-          onPressed: sendContacts,
+          onPressed: () {
+            if(selectedContacts.isNotEmpty)
+              sendContacts();
+            else
+              print('contact not selected');
+          },
         ),
       ),
     );
