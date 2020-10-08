@@ -14,49 +14,50 @@ class SelectContact extends StatefulWidget {
   SelectContact(this.contacts);
   @override
   State<StatefulWidget> createState() {
-    return _SelectContactState();
+    return SelectContactState();
   }
 }
 
-class _SelectContactState extends State<SelectContact> {
-  final BehaviorSubject<Iterable<Contact>> _readContactsStream =
+class SelectContactState extends State<SelectContact> {
+  final BehaviorSubject<Iterable<Contact>> readContactsStream =
       BehaviorSubject();
-  List<bool> _isChecked = List<bool>();
-  List<String> _selectedContacts = List<String>();
+  List<bool> isChecked = List<bool>();
+  List<String> selectedContacts = List<String>();
 
   @override
   void initState() {
     super.initState();
     final Iterable<Contact> _contacts = this.widget.contacts['contact'];
-    _readContactsStream.sink.add(_contacts);
+    readContactsStream.sink.add(_contacts);
     for (int i = 0; i < _contacts.length; i++) {
-      _isChecked.add(false);
+      isChecked.add(false);
     }
   }
 
   void sendContacts() {
-    if (_selectedContacts[0] != '') {
-      Navigator.pushNamed(context, AppData.pageRoutSendSms, arguments: {'selectedNums': _selectedContacts});
+    if (selectedContacts[0] != '') {
+      Navigator.pushNamed(context, AppData.pageRoutSendSms,
+          arguments: {'selectedNums': selectedContacts});
     }
   }
 
   void dispose() {
     super.dispose();
-    _readContactsStream.close();
+    readContactsStream.close();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        drawer: Drawer(),
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 2,
           actions: <Widget>[
             IconButton(
               onPressed: () {
-                showSearch(context: context, delegate: Search());
+                showSearch(
+                    context: context, delegate: Search(this.widget.contacts));
               },
               icon: Icon(Icons.search),
               color: Colors.black54,
@@ -81,16 +82,18 @@ class _SelectContactState extends State<SelectContact> {
           ),
         ),
         body: StreamBuilder<Iterable<Contact>>(
-          stream: _readContactsStream.stream,
+          stream: readContactsStream.stream,
           builder: (final context, final snapshot) {
-            if(!snapshot.hasData){
-              return Center(child: CircularProgressIndicator(),);
+            if (!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
             return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
                 return CheckboxListTile(
-                  value: _isChecked[index],
+                  value: isChecked[index],
                   title: Container(
                     height: 70,
                     decoration: BoxDecoration(
@@ -107,12 +110,27 @@ class _SelectContactState extends State<SelectContact> {
                       children: <Widget>[
                         Padding(
                           padding: const EdgeInsets.only(left: 8, top: 8),
-                          child: Text(snapshot.data.elementAt(index).displayName,
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.grey[700],
-                            ),
+                          child: Column(
+                            children: <Widget>[
+                              Text(
+                                snapshot.data.elementAt(index).displayName,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey[700],
+                                ),
+                              ),
+                              Text(snapshot.data
+                                  .elementAt(index)
+                                  .phones
+                                  .elementAt(0)
+                                  .value,
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         SizedBox(height: 36),
@@ -121,21 +139,21 @@ class _SelectContactState extends State<SelectContact> {
                   ),
                   onChanged: (bool value) {
                     setState(() {
-                      _isChecked[index] = value;
+                      isChecked[index] = value;
                       if (value) {
-                        _selectedContacts.add(snapshot.data
+                        selectedContacts.add(snapshot.data
                             .elementAt(index)
                             .phones
                             .elementAt(0)
                             .value);
-                        print(_selectedContacts);
+                        print(selectedContacts);
                       } else {
-                        _selectedContacts.remove(snapshot.data
+                        selectedContacts.remove(snapshot.data
                             .elementAt(index)
                             .phones
                             .elementAt(0)
                             .value);
-                        print(_selectedContacts);
+                        print(selectedContacts);
                       }
                     });
                   },
