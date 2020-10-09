@@ -1,9 +1,4 @@
 import 'package:flutter/cupertino.dart';
-///-receive contact information using MaterialPageRoute argument
-///-add radio buttons beside every contact
-///-selected contacts will be send to sms_widget
-///-then from sms_widget sms will be sent using already existing code.
-
 import 'package:flutter/material.dart';
 import 'package:quick_sms_sender/src/app_data.dart';
 import 'package:quick_sms_sender/src/search_delegate.dart';
@@ -22,6 +17,7 @@ class SelectContact extends StatefulWidget {
 class SelectContactState extends State<SelectContact> {
   final BehaviorSubject<Iterable<Contact>> readContactsStream =
       BehaviorSubject();
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<bool> isChecked = List<bool>();
   List<String> selectedContacts = List<String>();
 
@@ -51,6 +47,7 @@ class SelectContactState extends State<SelectContact> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           backgroundColor: Colors.white,
           elevation: 2,
@@ -98,8 +95,10 @@ class SelectContactState extends State<SelectContact> {
                     children: <Widget>[
                       FlatButton(
                         color: Colors.greenAccent[100],
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-                        child: Text('Select All',
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18)),
+                        child: Text(
+                          'Select All',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
@@ -119,13 +118,13 @@ class SelectContactState extends State<SelectContact> {
                           });
                         },
                       ),
-
                       SizedBox(width: 6),
-
                       FlatButton(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(18)),
                         color: Colors.greenAccent[100],
-                        child: Text('Deselect All',
+                        child: Text(
+                          'Deselect All',
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
@@ -151,7 +150,6 @@ class SelectContactState extends State<SelectContact> {
                       return CheckboxListTile(
                         value: isChecked[index],
                         title: Container(
-                          height: 95,
                           decoration: BoxDecoration(
                             color: Colors.grey[100],
                             borderRadius: BorderRadius.all(Radius.circular(18)),
@@ -167,6 +165,7 @@ class SelectContactState extends State<SelectContact> {
                               Padding(
                                 padding: const EdgeInsets.only(left: 8, top: 8),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
                                       snapshot.data
@@ -179,16 +178,22 @@ class SelectContactState extends State<SelectContact> {
                                       ),
                                     ),
                                     SizedBox(height: 8),
-                                    Text(
-                                      snapshot.data
-                                          .elementAt(index)
-                                          .phones
-                                          .elementAt(0)
-                                          .value,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey[600],
-                                      ),
+                                    ListView.builder(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: snapshot.data.elementAt(index).phones.length,
+                                      itemBuilder: (context, index_2) {
+                                        return Padding(
+                                          padding: const EdgeInsets.only(top: 2),
+                                          child: Text(snapshot.data.elementAt(index).phones.elementAt(index_2).value,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w300,
+                                              fontSize: 17,
+                                              color: Colors.grey[600],
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
                                   ],
                                 ),
@@ -229,10 +234,25 @@ class SelectContactState extends State<SelectContact> {
           icon: Icon(Icons.done),
           label: Text('DONE'),
           onPressed: () {
-            if(selectedContacts.isNotEmpty)
+            if (selectedContacts.isNotEmpty) {
               sendContacts();
-            else
-              print('contact not selected');
+            } else {
+              print('Select something');
+              _scaffoldKey.currentState.showSnackBar(SnackBar(
+                content: Text(
+                  'Select a contact',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                duration: Duration(seconds: 2),
+                action: SnackBarAction(
+                  label: 'Ok',
+                  onPressed: () {},
+                ),
+              ));
+            }
           },
         ),
       ),
