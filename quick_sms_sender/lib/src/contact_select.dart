@@ -81,7 +81,7 @@ class SelectContactState extends State<SelectContact> {
         ),
         body: StreamBuilder<Iterable<Contact>>(
           stream: readContactsStream.stream,
-          builder: (final context, final snapshot) {
+          builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(
                 child: CircularProgressIndicator(),
@@ -105,20 +105,22 @@ class SelectContactState extends State<SelectContact> {
                           ),
                         ),
                         onPressed: () {
+                          for(int i = 0; i < snapshot.data.length; i++) {
+                            if(snapshot.data.elementAt(i).phones.isNotEmpty) {
+                              selectedContacts.add(snapshot.data.elementAt(i).phones.elementAt(0).value);
+                            }
+                          }
                           setState(() {
-                            for (int i = 0; i < snapshot.data.length; i++) {
-                              selectedContacts.add(snapshot.data
-                                  .elementAt(i)
-                                  .phones
-                                  .elementAt(0)
-                                  .value);
+                            for(int i = 0; i < snapshot.data.length; i++) {
                               isChecked[i] = true;
                             }
-                            print(selectedContacts);
                           });
+                          print(selectedContacts);
                         },
                       ),
+
                       SizedBox(width: 6),
+
                       FlatButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18)),
@@ -131,8 +133,8 @@ class SelectContactState extends State<SelectContact> {
                           ),
                         ),
                         onPressed: () {
+                          selectedContacts.clear();
                           setState(() {
-                            selectedContacts.clear();
                             for (int i = 0; i < snapshot.data.length; i++) {
                               isChecked[i] = false;
                             }

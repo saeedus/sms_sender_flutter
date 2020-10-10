@@ -5,13 +5,14 @@ class Search extends SearchDelegate {
   final Map contactList;
   Search(this.contactList);
   List<String> contactListToSearch = List<String>();
+  
 
   void contactToList() {
     final Iterable<Contact> _contacts = this.contactList['contact'];
     _contacts.forEach((element) {
       contactListToSearch.add(element.displayName);
     });
-    print(_contacts.length);
+    print('total contact = ' + _contacts.length.toString());
   }
 
   List<Widget> buildActions(BuildContext context) {
@@ -38,11 +39,13 @@ class Search extends SearchDelegate {
   }
 
   Widget buildResults(BuildContext context) {
-    return Container();
+    return SizedBox();
   }
 
   Widget buildSuggestions(BuildContext context) {
-    contactToList();
+    if(contactListToSearch.isEmpty) {
+      contactToList();
+    }
     List<String> suggestionList = [];
 
     query.isEmpty
@@ -53,7 +56,7 @@ class Search extends SearchDelegate {
       itemCount: suggestionList.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(suggestionList.elementAt(index) + ' (' + suggestionList.length.toString() + ')' + index.toString()),
+          title: Text(suggestionList.elementAt(index)),
         );
       },
     );
