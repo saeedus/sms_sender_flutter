@@ -60,7 +60,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               ButtonTheme(
-                splashColor: Colors.blueAccent[100],
+                splashColor: Colors.lightBlueAccent[100],
                 minWidth: 156,
                 child: FlatButton(
                   shape: RoundedRectangleBorder(
@@ -86,7 +86,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
               SizedBox(height: 12),
               ButtonTheme(
                 minWidth: 156,
-                splashColor: Colors.blueAccent[100],
+                splashColor: Colors.lightBlueAccent[100],
                 child: FlatButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(24.0),
@@ -111,7 +111,7 @@ class _NumberPickerState extends State<NumberPickerWidget> {
               SizedBox(height: 12),
               ButtonTheme(
                 minWidth: 156,
-                splashColor: Colors.blueAccent[100],
+                splashColor: Colors.lightBlueAccent[100],
                 child: FlatButton(
                   shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(24.0),

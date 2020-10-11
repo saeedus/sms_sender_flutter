@@ -43,42 +43,79 @@ class SelectContactState extends State<SelectContact> {
     readContactsStream.close();
   }
 
+  Widget _defaultBar() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 2,
+      actions: <Widget>[
+        IconButton(
+          onPressed: () {
+            showSearch(
+                context: context, delegate: Search(this.widget.contacts));
+          },
+          icon: Icon(Icons.search),
+          color: Colors.black54,
+        ),
+      ],
+      leading: IconButton(
+        color: Colors.black54,
+        tooltip: 'Previous page',
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+      title: Text(
+        'Select Contact',
+        style: TextStyle(
+          fontWeight: FontWeight.normal,
+          fontSize: 19,
+          color: Colors.grey[800],
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+
+  Widget _selectedBar() {
+    return AppBar(
+      backgroundColor: Colors.lightGreenAccent[200],
+      elevation: 2,
+      actions: <Widget>[
+        IconButton(
+          onPressed: () {
+            showSearch(
+                context: context, delegate: Search(this.widget.contacts));
+          },
+          icon: Icon(Icons.search),
+          color: Colors.black54,
+        ),
+      ],
+      leading: IconButton(
+        color: Colors.black54,
+        icon: Icon(Icons.arrow_back),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
+      ),
+      title: Text(
+        selectedContacts.length.toString() + ' Selected',
+        style: TextStyle(
+          fontWeight: FontWeight.normal,
+          fontSize: 20,
+          color: Colors.grey[800],
+          letterSpacing: 0.5,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 2,
-          actions: <Widget>[
-            IconButton(
-              onPressed: () {
-                showSearch(
-                    context: context, delegate: Search(this.widget.contacts));
-              },
-              icon: Icon(Icons.search),
-              color: Colors.black54,
-            ),
-          ],
-          leading: IconButton(
-            color: Colors.black54,
-            tooltip: 'Previous page',
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          title: Text(
-            'Select Contact',
-            style: TextStyle(
-              fontWeight: FontWeight.normal,
-              fontSize: 19,
-              color: Colors.grey[800],
-              letterSpacing: 0.5,
-            ),
-          ),
-        ),
+        appBar: selectedContacts.isEmpty ? _defaultBar() : _selectedBar(),
         body: StreamBuilder<Iterable<Contact>>(
           stream: readContactsStream.stream,
           builder: (context, snapshot) {
@@ -105,22 +142,25 @@ class SelectContactState extends State<SelectContact> {
                           ),
                         ),
                         onPressed: () {
-                          for(int i = 0; i < snapshot.data.length; i++) {
-                            if(snapshot.data.elementAt(i).phones.isNotEmpty) {
-                              selectedContacts.add(snapshot.data.elementAt(i).phones.elementAt(0).value);
+                          selectedContacts.clear();
+                          for (int i = 0; i < snapshot.data.length; i++) {
+                            if (snapshot.data.elementAt(i).phones.isNotEmpty) {
+                              selectedContacts.add(snapshot.data
+                                  .elementAt(i)
+                                  .phones
+                                  .elementAt(0)
+                                  .value);
                             }
                           }
                           setState(() {
-                            for(int i = 0; i < snapshot.data.length; i++) {
+                            for (int i = 0; i < snapshot.data.length; i++) {
                               isChecked[i] = true;
                             }
                           });
                           print(selectedContacts);
                         },
                       ),
-
                       SizedBox(width: 6),
-
                       FlatButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18)),
@@ -183,11 +223,20 @@ class SelectContactState extends State<SelectContact> {
                                     ListView.builder(
                                       physics: NeverScrollableScrollPhysics(),
                                       shrinkWrap: true,
-                                      itemCount: snapshot.data.elementAt(index).phones.length,
+                                      itemCount: snapshot.data
+                                          .elementAt(index)
+                                          .phones
+                                          .length,
                                       itemBuilder: (context, index_2) {
                                         return Padding(
-                                          padding: const EdgeInsets.only(top: 2),
-                                          child: Text(snapshot.data.elementAt(index).phones.elementAt(index_2).value,
+                                          padding:
+                                              const EdgeInsets.only(top: 2),
+                                          child: Text(
+                                            snapshot.data
+                                                .elementAt(index)
+                                                .phones
+                                                .elementAt(index_2)
+                                                .value,
                                             style: TextStyle(
                                               fontWeight: FontWeight.w300,
                                               fontSize: 17,
