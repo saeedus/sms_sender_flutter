@@ -17,7 +17,6 @@ class SelectContact extends StatefulWidget {
 class SelectContactState extends State<SelectContact> {
   final BehaviorSubject<Iterable<Contact>> readContactsStream =
       BehaviorSubject();
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   List<bool> isChecked = List<bool>();
   List<String> selectedContacts = List<String>();
 
@@ -79,7 +78,7 @@ class SelectContactState extends State<SelectContact> {
 
   Widget _selectedBar() {
     return AppBar(
-      backgroundColor: Colors.lightGreenAccent[200],
+      backgroundColor: Color.fromRGBO(139, 202, 202, 1),
       elevation: 2,
       actions: <Widget>[
         IconButton(
@@ -110,11 +109,22 @@ class SelectContactState extends State<SelectContact> {
     );
   }
 
+  Widget _floatingButton() {
+    if (selectedContacts.isNotEmpty) {
+      return FloatingActionButton.extended(
+        backgroundColor: Color.fromRGBO(139, 202, 202, 1),
+        icon: Icon(Icons.done),
+        label: Text('DONE'),
+        onPressed: sendContacts,
+      );
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        key: _scaffoldKey,
         appBar: selectedContacts.isEmpty ? _defaultBar() : _selectedBar(),
         body: StreamBuilder<Iterable<Contact>>(
           stream: readContactsStream.stream,
@@ -131,7 +141,7 @@ class SelectContactState extends State<SelectContact> {
                   child: Row(
                     children: <Widget>[
                       FlatButton(
-                        color: Colors.greenAccent[100],
+                        color: Color.fromRGBO(212, 244, 236, 1),
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18)),
                         child: Text(
@@ -164,7 +174,7 @@ class SelectContactState extends State<SelectContact> {
                       FlatButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(18)),
-                        color: Colors.greenAccent[100],
+                        color: Color.fromRGBO(212, 244, 236, 1),
                         child: Text(
                           'Deselect All',
                           style: TextStyle(
@@ -190,6 +200,7 @@ class SelectContactState extends State<SelectContact> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) {
                       return CheckboxListTile(
+                        activeColor: Color.fromRGBO(254, 168, 137, 1),
                         value: isChecked[index],
                         title: Container(
                           decoration: BoxDecoration(
@@ -281,31 +292,7 @@ class SelectContactState extends State<SelectContact> {
             );
           },
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          icon: Icon(Icons.done),
-          label: Text('DONE'),
-          onPressed: () {
-            if (selectedContacts.isNotEmpty) {
-              sendContacts();
-            } else {
-              print('Select something');
-              _scaffoldKey.currentState.showSnackBar(SnackBar(
-                content: Text(
-                  'Select a contact',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
-                duration: Duration(seconds: 2),
-                action: SnackBarAction(
-                  label: 'Ok',
-                  onPressed: () {},
-                ),
-              ));
-            }
-          },
-        ),
+        floatingActionButton: _floatingButton(),
       ),
     );
   }
